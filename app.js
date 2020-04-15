@@ -947,50 +947,50 @@ app.get('/countemo', cors(issue2options), function (req, res) {
         else if (maxProp == 'sadness') sadness++;
         else if (maxProp == 'surprise') surprise++;
 
-        let maxProp = null
-        let maxValue = -1
-        let secProp = null
-        let secValue = -1
+      //   let maxProp = null
+      //   let maxValue = -1
+      //   let secProp = null
+      //   let secValue = -1
 
-        for (var prop in emotion2) {
-          if (emotion2.hasOwnProperty(prop)) {
+      //   for (var prop in emotion2) {
+      //     if (emotion2.hasOwnProperty(prop)) {
 
-            let value = emotion2[prop]
-            if (value > maxValue) {
-              secValue = maxValue;
-              secProp = maxProp
-              maxValue = value;
-              maxProp = prop
-            } else if (secValue < value) {
-              secValue = value;
-              secProp = prop
-            }
-          }
-        }
+      //       let value = emotion2[prop]
+      //       if (value > maxValue) {
+      //         secValue = maxValue;
+      //         secProp = maxProp
+      //         maxValue = value;
+      //         maxProp = prop
+      //       } else if (secValue < value) {
+      //         secValue = value;
+      //         secProp = prop
+      //       }
+      //     }
+      //   }
 
-        if (result[i].checkout.emotion != "") {
-          if (maxProp == 'neutral') {
-            if (maxValue == 1) {
-              neutral++;
-            }
-            else if (maxValue < 1) {
-              if (secProp == 'anger') anger++;
-              else if (secProp == 'contempt') contempt++;
-              else if (secProp == 'disgust') disgust++;
-              else if (secProp == 'fear') fear++;
-              else if (secProp == 'happiness') happiness++;
-              else if (secProp == 'sadness') sadness++;
-              else if (secProp == 'surprise') surprise++;
-            }
-          }
-          else if (maxProp == 'anger') anger++;
-          else if (maxProp == 'contempt') contempt++;
-          else if (maxProp == 'disgust') disgust++;
-          else if (maxProp == 'fear') fear++;
-          else if (maxProp == 'happiness') happiness++;
-          else if (maxProp == 'sadness') sadness++;
-          else if (maxProp == 'surprise') surprise++;
-        }
+      //   if (result[i].checkout.emotion != "") {
+      //     if (maxProp == 'neutral') {
+      //       if (maxValue == 1) {
+      //         neutral++;
+      //       }
+      //       else if (maxValue < 1) {
+      //         if (secProp == 'anger') anger++;
+      //         else if (secProp == 'contempt') contempt++;
+      //         else if (secProp == 'disgust') disgust++;
+      //         else if (secProp == 'fear') fear++;
+      //         else if (secProp == 'happiness') happiness++;
+      //         else if (secProp == 'sadness') sadness++;
+      //         else if (secProp == 'surprise') surprise++;
+      //       }
+      //     }
+      //     else if (maxProp == 'anger') anger++;
+      //     else if (maxProp == 'contempt') contempt++;
+      //     else if (maxProp == 'disgust') disgust++;
+      //     else if (maxProp == 'fear') fear++;
+      //     else if (maxProp == 'happiness') happiness++;
+      //     else if (maxProp == 'sadness') sadness++;
+      //     else if (maxProp == 'surprise') surprise++;
+      //   }
 
 
       }
