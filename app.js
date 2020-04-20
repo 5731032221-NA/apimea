@@ -197,6 +197,29 @@ app.post('/postmeaprofile/:id', cors(issue2options), function (req, res) {
   });
 });
 
+app.post('/postmeapic/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("mea");
+    // try{
+    var query = { _id: ObjectId(req.params.id) };
+    var newvalues = { $set: { encimage: req.body.image } };
+    dbo.collection("profile").updateOne(query, newvalues, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
 
 
 
