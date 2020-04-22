@@ -22,6 +22,7 @@ const issue2options = {
 
 
 
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
@@ -87,7 +88,94 @@ app.post('/posttrainimage', function (req, res) {
 });
 
 
+app.get('/gethistoricalemo', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("historical");
+    // try{
+    dbo.collection("emo").find().project({_id: 0}).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      // result.forEach(function (item) {
+
+      //   if (item.encimmage != "" && item.encimmage != null) {
+      //     // console.log(item.encimmage);
+      //     var bytes = CryptoJS.AES.decrypt(item.encimmage, 'secret key 123');
+      //     item['encimmage'] = bytes.toString(CryptoJS.enc.Utf8);
+      //   }
+      // });
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+app.get('/gethistoricalcheckin', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("historical");
+    // try{
+    dbo.collection("checkin").find().project({_id: 0}).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      // result.forEach(function (item) {
+
+      //   if (item.encimmage != "" && item.encimmage != null) {
+      //     // console.log(item.encimmage);
+      //     var bytes = CryptoJS.AES.decrypt(item.encimmage, 'secret key 123');
+      //     item['encimmage'] = bytes.toString(CryptoJS.enc.Utf8);
+      //   }
+      // });
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
 app.get('/getmeaprofile', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("mea");
+    // try{
+    dbo.collection("profile").find().project({encimage: 0}).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      // result.forEach(function (item) {
+
+      //   if (item.encimmage != "" && item.encimmage != null) {
+      //     // console.log(item.encimmage);
+      //     var bytes = CryptoJS.AES.decrypt(item.encimmage, 'secret key 123');
+      //     item['encimmage'] = bytes.toString(CryptoJS.enc.Utf8);
+      //   }
+      // });
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+app.get('/getmeaprofileandimage', cors(issue2options), function (req, res) {
 
   const uri = "mongodb://localhost:27017/";
   //, { useNewUrlParser: true }
@@ -99,12 +187,44 @@ app.get('/getmeaprofile', cors(issue2options), function (req, res) {
     dbo.collection("profile").find().toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
+      result.forEach(function (item) {
+
+        if (item.encimage != "" && item.encimage != null) {
+          // console.log(item.encimmage);
+          var bytes = CryptoJS.AES.decrypt(item.encimage, 'meaprofilepic');
+          item['encimage'] = bytes.toString(CryptoJS.enc.Utf8);
+        }
+      });
       res.json(result);
       db.close();
     });
-    // }catch(err){
-    // //console.log(err.stack);
-    // res.json("[]");}
+  });
+});
+
+app.get('/getimagebyid/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("mea");
+    // try{
+      var query = { id: req.params.id };
+      dbo.collection("profile").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      result.forEach(function (item) {
+
+        if (item.encimage != "" && item.encimage != null) {
+          // console.log(item.encimmage);
+          var bytes = CryptoJS.AES.decrypt(item.encimage, 'meaprofilepic');
+          item['encimage'] = bytes.toString(CryptoJS.enc.Utf8);
+        }
+      });
+      res.json(result);
+      db.close();
+    });
   });
 });
 
@@ -184,7 +304,7 @@ app.post('/postmeaprofile/:id', cors(issue2options), function (req, res) {
     var dbo = db.db("mea");
     // try{
     var query = { _id: ObjectId(req.params.id) };
-    var newvalues = { $set: { title: req.body.title, id: req.body.id, surname: req.body.surname, email: req.body.email, image: req.body.image } };
+    var newvalues = { $set: { title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position } };
     dbo.collection("profile").updateOne(query, newvalues, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
@@ -221,8 +341,6 @@ app.post('/postmeapic/:id', cors(issue2options), function (req, res) {
 });
 
 
-
-
 app.post('/postmeaprofile', cors(issue2options), function (req, res) {
 
   const uri = "mongodb://localhost:27017/";
@@ -233,7 +351,7 @@ app.post('/postmeaprofile', cors(issue2options), function (req, res) {
     var dbo = db.db("mea");
     // console.log("req", req.body);
     // res.send(req.body);
-    var myobj = { id: req.body.id, title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, image: req.body.image };
+    var myobj = { id: req.body.id, title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position, image: req.body.image };
     dbo.collection("profile").insertOne(myobj, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
@@ -262,6 +380,56 @@ app.delete('/deletemeaprofile/:id', cors(issue2options), function (req, res) {
       db.close();
     });
 
+  });
+});
+
+app.get('/getmeadefault', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("mea");
+    // try{
+
+    dbo.collection("default").find().toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+app.get('/getmeadefault/:id', cors(issue2options), function (req, res) {
+  let date_ob = new Date();
+  let year = date_ob.getFullYear();
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("mea");
+    // try{
+    var query = { id: req.params.id };
+    dbo.collection("default").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      // console.log(year);
+      // console.log(result[0].year);
+      // console.log(parseInt(result[0].year));
+      // console.log(year - parseInt(result[0].year));
+      result[0].age = year - parseInt(result[0].year) -1958;
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
   });
 });
 
@@ -308,6 +476,10 @@ app.get('/getcropimage/:id', cors(issue2options), function (req, res) {
   });
 });
 
+
+// app.get('/getcheckin', function (req, res) {
+//   res.json([{ "_id": "5e97ad6fdf114e7270e2c215", "id": "1433406", "checkin": "07:57", "checkindatetime": "20200416075711", "checkinMonth": "2020-04", "checkinEmotion": { "gender": "female", "age": 19, "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } }, "checkinEmo": "neutral", "checkinImageCrop": "2020-04-16-1-07571137-crop.jpg", "camerain": 1, "checkout": "", "checkoutEmotion": { "gender": "", "age": 0 }, "checkoutEmo": "", "checkoutImageCrop": "", "cameraout": 0, "checkoutdatetime": "", "checkoutMonth": "" }, { "_id": "5e97b282df114e7270e2c22a", "id": "1674425", "checkin": "08:18", "checkindatetime": "20200416081853", "checkinMonth": "2020-04", "checkinEmotion": { "gender": "female", "age": 19, "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } }, "checkinEmo": "neutral", "checkinImageCrop": "2020-04-16-1-08185324-crop.jpg", "camerain": 1, "checkout": "", "checkoutEmotion": { "gender": "", "age": 0 }, "checkoutEmo": "", "checkoutImageCrop": "", "cameraout": 0, "checkoutdatetime": "", "checkoutMonth": "" }, { "_id": "5e97b284df114e7270e2c238", "id": "1576001", "checkin": "08:18", "checkindatetime": "20200416081856", "checkinMonth": "2020-04", "checkinEmotion": { "gender": "female", "age": 19, "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } }, "checkinEmo": "neutral", "checkinImageCrop": "2020-04-16-1-08185624-crop.jpg", "camerain": 1, "checkout": "", "checkoutEmotion": { "gender": "", "age": 0 }, "checkoutEmo": "", "checkoutImageCrop": "", "cameraout": 0, "checkoutdatetime": "", "checkoutMonth": "" }, { "_id": "5e97b285df114e7270e2c23d", "id": "1559425", "checkin": "08:18", "checkindatetime": "20200416081854", "checkinMonth": "2020-04", "checkinEmotion": { "gender": "female", "age": 19, "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } }, "checkinEmo": "neutral", "checkinImageCrop": "2020-04-16-1-08185468-crop.jpg", "camerain": 1, "checkout": "", "checkoutEmotion": { "gender": "", "age": 0 }, "checkoutEmo": "", "checkoutImageCrop": "", "cameraout": 0, "checkoutdatetime": "", "checkoutMonth": "" }, { "_id": "5e97b297df114e7270e2c245", "id": "2515908", "checkin": "08:18", "checkindatetime": "20200416081850", "checkinMonth": "2020-04", "checkinEmotion": { "gender": "female", "age": 19, "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } }, "checkinEmo": "neutral", "checkinImageCrop": "2020-04-16-1-08185049-crop.jpg", "camerain": 1, "checkout": "", "checkoutEmotion": { "gender": "", "age": 0 }, "checkoutEmo": "", "checkoutImageCrop": "", "cameraout": 0, "checkoutdatetime": "", "checkoutMonth": "" }])
+// });
 app.get('/getcheckin', function (req, res) {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
@@ -661,29 +833,29 @@ app.get('/getdailyhappy', function (req, res) {
 
 
         if (element.checkinEmo == "happiness" || element.checkinEmo == "surprise") {
-          arr[element.id] = (element.checkinEmotion.emotion.happiness*1000 + element.checkinEmotion.emotion.surprise*1000)/2;
+          arr[element.id] = (element.checkinEmotion.emotion.happiness * 100 + element.checkinEmotion.emotion.surprise * 100) / 2;
 
         }
 
         if (element.checkoutEmo == "happiness" || element.checkoutEmo == "surprise") {
           if (arr[element.id] == null) {
-            arr[element.id] =  (element.checkoutEmotion.emotion.happiness*1000 + element.checkoutEmotion.emotion.surprise*1000);
+            arr[element.id] = (element.checkoutEmotion.emotion.happiness * 100 + element.checkoutEmotion.emotion.surprise * 100);
 
           } else {
-            arr[element.id] +=  (element.checkoutEmotion.emotion.happiness*1000 + element.checkoutEmotion.emotion.surprise*1000);
+            arr[element.id] += (element.checkoutEmotion.emotion.happiness * 100 + element.checkoutEmotion.emotion.surprise * 100);
           }
 
         }
 
 
         // console.log("done");
-        
+
 
       });
       res.json(arr);
       db.close();
     });
- 
+
 
 
   });
@@ -728,7 +900,13 @@ app.get('/getdailyworktime', function (req, res) {
         }
         // if ((  checkouthh- parseInt(element.checkindatetime.substring(8, 10)) > maxhh ) || ((checkouthh -  parseInt(element.checkindatetime.substring(8, 10)) == maxhh) && ( checkoutmm - parseInt(element.checkindatetime.substring(10, 12)) > checkoutmm))) {
         // if (arr[element.id] == null) {
-        arr[element.id] = ((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
+
+        if (parseInt(element.checkindatetime.substring(8, 10)) < 7 || ((parseInt(element.checkindatetime.substring(8, 10)) == 7) && (parseInt(element.checkindatetime.substring(10, 12)) < 41))) {
+          arr[element.id] = ((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
+        }else {
+          arr[element.id] = -1* (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
+        }
+
         // } else {
         //   arr[element.id]++;
         // }
@@ -970,50 +1148,50 @@ app.get('/countemo', cors(issue2options), function (req, res) {
         else if (maxProp == 'sadness') sadness++;
         else if (maxProp == 'surprise') surprise++;
 
-      //   let maxProp = null
-      //   let maxValue = -1
-      //   let secProp = null
-      //   let secValue = -1
+        // let maxProp = null
+        // let maxValue = -1
+        // let secProp = null
+        // let secValue = -1
 
-      //   for (var prop in emotion2) {
-      //     if (emotion2.hasOwnProperty(prop)) {
+        // for (var prop in emotion2) {
+        //   if (emotion2.hasOwnProperty(prop)) {
 
-      //       let value = emotion2[prop]
-      //       if (value > maxValue) {
-      //         secValue = maxValue;
-      //         secProp = maxProp
-      //         maxValue = value;
-      //         maxProp = prop
-      //       } else if (secValue < value) {
-      //         secValue = value;
-      //         secProp = prop
-      //       }
-      //     }
-      //   }
+        //     let value = emotion2[prop]
+        //     if (value > maxValue) {
+        //       secValue = maxValue;
+        //       secProp = maxProp
+        //       maxValue = value;
+        //       maxProp = prop
+        //     } else if (secValue < value) {
+        //       secValue = value;
+        //       secProp = prop
+        //     }
+        //   }
+        // }
 
-      //   if (result[i].checkout.emotion != "") {
-      //     if (maxProp == 'neutral') {
-      //       if (maxValue == 1) {
-      //         neutral++;
-      //       }
-      //       else if (maxValue < 1) {
-      //         if (secProp == 'anger') anger++;
-      //         else if (secProp == 'contempt') contempt++;
-      //         else if (secProp == 'disgust') disgust++;
-      //         else if (secProp == 'fear') fear++;
-      //         else if (secProp == 'happiness') happiness++;
-      //         else if (secProp == 'sadness') sadness++;
-      //         else if (secProp == 'surprise') surprise++;
-      //       }
-      //     }
-      //     else if (maxProp == 'anger') anger++;
-      //     else if (maxProp == 'contempt') contempt++;
-      //     else if (maxProp == 'disgust') disgust++;
-      //     else if (maxProp == 'fear') fear++;
-      //     else if (maxProp == 'happiness') happiness++;
-      //     else if (maxProp == 'sadness') sadness++;
-      //     else if (maxProp == 'surprise') surprise++;
-      //   }
+        // if (result[i].checkout.emotion != "") {
+        //   if (maxProp == 'neutral') {
+        //     if (maxValue == 1) {
+        //       neutral++;
+        //     }
+        //     else if (maxValue < 1) {
+        //       if (secProp == 'anger') anger++;
+        //       else if (secProp == 'contempt') contempt++;
+        //       else if (secProp == 'disgust') disgust++;
+        //       else if (secProp == 'fear') fear++;
+        //       else if (secProp == 'happiness') happiness++;
+        //       else if (secProp == 'sadness') sadness++;
+        //       else if (secProp == 'surprise') surprise++;
+        //     }
+        //   }
+        //   else if (maxProp == 'anger') anger++;
+        //   else if (maxProp == 'contempt') contempt++;
+        //   else if (maxProp == 'disgust') disgust++;
+        //   else if (maxProp == 'fear') fear++;
+        //   else if (maxProp == 'happiness') happiness++;
+        //   else if (maxProp == 'sadness') sadness++;
+        //   else if (maxProp == 'surprise') surprise++;
+        // }
 
 
       }
@@ -1636,6 +1814,10 @@ app.get('/getcountexitbygender/:gender', cors(issue2options), function (req, res
 
     var query = { "checkinEmotion.gender": req.params.gender };
     var query2 = { "checkoutEmotion.gender": req.params.gender };
+    let entryhh = 0;
+    let entrymm = 0;
+    let exithh = 0;
+    let exitmm = 0;
     dbo.collection("checkin." + year + "-" + month + "-" + date).find(query).toArray(function (err, result) {
       if (err) res.json("[]");
       dbo.collection("checkin." + year + "-" + month + "-" + date).find(query2).toArray(function (err, result2) {
@@ -1648,19 +1830,21 @@ app.get('/getcountexitbygender/:gender', cors(issue2options), function (req, res
         let exit = result2.length;
 
 
-        // for (let i = 0; i < result.length; i++) {
-        //   if (result[i].checkoutdatetime == "") {
-        //   }else if(parseInt(result[i].checkindatetime) < parseInt(result[i].checkoutdatetime)){
-        //     exit++;
-        //   }
+        result.forEach((element) => {
+          entryhh += parseInt(element.checkin.substring(0, 2));
+          entrymm += parseInt(element.checkin.substring(3, 5));
+        })
 
-        // }
+        result2.forEach((element) => {
+          exithh += parseInt(element.checkout.substring(0, 2));
+          exitmm += parseInt(element.checkout.substring(3, 5));
+        })
 
-        // ontime = ontime;
-        // late = late;
-        // absence = absence;
+
         let jsonresponse = {
-          "entry": entry, "exit": exit
+          "entry": entry, "exit": exit,
+          "entryhh": entryhh, "entrymm": entrymm,
+          "exithh": exithh, "exitmm": exitmm
         }
         //console.log(jsonresponse);
         res.json(jsonresponse);
@@ -1724,6 +1908,8 @@ app.get('/getmeabygender/:gender', cors(issue2options), function (req, res) {
           for (let i = 0; i < conc.length; i++) {
             for (let j = 0; j < result3.length; j++) {
               if (result3[j].id == conc[i].id) {
+                result3[j]['checkin'] = conc[i]['checkin'];
+                result3[j]['checkout'] = conc[i]['checkout'];
                 mea.push(result3[j]);
 
               }
@@ -1783,6 +1969,8 @@ app.get('/getmeabygender/:gender/:happy', cors(issue2options), function (req, re
           for (let i = 0; i < conc.length; i++) {
             for (let j = 0; j < result3.length; j++) {
               if (result3[j].id == conc[i].id) {
+                result3[j]['checkin'] = conc[i]['checkin'];
+                result3[j]['checkout'] = conc[i]['checkout'];
                 mea.push(result3[j]);
 
               }
@@ -1813,7 +2001,10 @@ app.get('/getcountexitbygender/:gender/:happy', cors(issue2options), function (r
   let qr = "neutral"
   if (req.params.happy == "happy") qr = { $in: ["happiness", "surprise"] };
   else if (req.params.happy == "unhappy") qr = { $in: ["anger", "contempt", "disgust", "fear", "sadness"] };
-
+  let entryhh = 0;
+  let entrymm = 0;
+  let exithh = 0;
+  let exitmm = 0;
 
   const uri = "mongodb://localhost:27017/";
   //, { useNewUrlParser: true }
@@ -1828,27 +2019,27 @@ app.get('/getcountexitbygender/:gender/:happy', cors(issue2options), function (r
       if (err) res.json("[]");
       dbo.collection("checkin." + year + "-" + month + "-" + date).find(query2).toArray(function (err, result2) {
         if (err) res.json("[]");
-        //console.log(result);
-        // let ontime = 0;
-        // let late = 0;
-        // let absence = 42;
         let entry = result.length;
         let exit = result2.length;
 
-        // for (let i = 0; i < result.length; i++) {
-        //   if (result[i].checkoutdatetime == "") {
-        //   }else if(parseInt(result[i].checkindatetime) < parseInt(result[i].checkoutdatetime)){
-        //     exit++;
-        //   }
 
-        // }
+        result.forEach((element) => {
+          entryhh += parseInt(element.checkin.substring(0, 2));
+          entrymm += parseInt(element.checkin.substring(3, 5));
+        })
 
-        // ontime = ontime;
-        // late = late;
-        // absence = absence;
+        result2.forEach((element) => {
+          exithh += parseInt(element.checkout.substring(0, 2));
+          exitmm += parseInt(element.checkout.substring(3, 5));
+        })
+
+
         let jsonresponse = {
-          "entry": entry, "exit": exit
+          "entry": entry, "exit": exit,
+          "entryhh": entryhh, "entrymm": entrymm,
+          "exithh": exithh, "exitmm": exitmm
         }
+
         //console.log(jsonresponse);
         res.json(jsonresponse);
         db.close();
