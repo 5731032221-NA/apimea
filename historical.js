@@ -94,7 +94,7 @@ const client = new MongoClient.connect(uri, async function (err, db) {
                                     if (err) throw err;
                                     //console.log("1 document inserted");
                                     db.close();
-                                    // process.exit();
+                                    process.exit();
                                 });
                             });
             
