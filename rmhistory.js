@@ -16,11 +16,12 @@ MongoClient.connect(url, function (err, db) {
     dbo.collection("emo").drop(function (err, delOK) {
         if (err) throw err;
         if (delOK) console.log("Collection deleted");
-        db.close();
+        // db.close();
+        dbo.collection("checkin").drop(function (err, delOK) {
+            if (err) throw err;
+            if (delOK) console.log("Collection deleted");
+            db.close();
+        });
     });
-    dbo.collection("checkin").drop(function (err, delOK) {
-        if (err) throw err;
-        if (delOK) console.log("Collection deleted");
-        db.close();
-    });
+
 });
