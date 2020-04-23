@@ -94,7 +94,7 @@ const client = new MongoClient.connect(uri, async function (err, db) {
                                     if (err) throw err;
                                     //console.log("1 document inserted");
                                     db.close();
-                                    process.stdin.resume();
+                                    
                                 });
                             });
             
@@ -113,5 +113,6 @@ const client = new MongoClient.connect(uri, async function (err, db) {
         // res.json(result);
         // db.close();
     });
-
+    
 });
+process.stdin.resume();
