@@ -1626,10 +1626,12 @@ app.get('/getdailyworktime', function (req, res) {
         }
         // if ((  checkouthh- parseInt(element.checkindatetime.substring(8, 10)) > maxhh ) || ((checkouthh -  parseInt(element.checkindatetime.substring(8, 10)) == maxhh) && ( checkoutmm - parseInt(element.checkindatetime.substring(10, 12)) > checkoutmm))) {
         // if (arr[element.id] == null) {
-
+        console.log(element.checkindatetime.substring(8, 10));
         if (parseInt(element.checkindatetime.substring(8, 10)) < 7 || ((parseInt(element.checkindatetime.substring(8, 10)) == 7) && (parseInt(element.checkindatetime.substring(10, 12)) < 41))) {
-          arr[element.id] = ((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
+          console.log("why")
+          arr[element.id] = ((checkouthh - p152arseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
         } else {
+          console.log("ok")
           arr[element.id] = -1 * (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
         }
 
