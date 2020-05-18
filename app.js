@@ -1613,8 +1613,8 @@ app.get('/getdailyworktime', function (req, res) {
 
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
-      let checkouthh = 22;//date_ob.getHours();
-      let checkoutmm = 22;//date_ob.getMinutes();
+      let checkouthh = date_ob.getHours();
+      let checkoutmm = date_ob.getMinutes();
       var arr = {}
       result.forEach(element => {
 
