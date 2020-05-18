@@ -11,7 +11,8 @@ const CryptoJS = require("crypto-js");
 // const bodyParser = require('body-parser')
 var ObjectId = require('mongodb').ObjectID;
 var master_key = 'meafacialkeycam1';
-app.use(express.json())
+app.use(express.json({limit: '50mb'}))
+// app.use(express.urlencoded({limit: '50mb'}));
 const subscriptionKey = '99d0310d30c24046a148cbf795a34121';
 const issue2options = {
   origin: true,
@@ -21,7 +22,8 @@ const issue2options = {
 };
 
 
-
+var timeout = require('connect-timeout');
+app.use(timeout('300s'));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -34,7 +36,7 @@ app.get('/', function (req, res) {
   res.send('hello world')
 })
 
-app.post('/posttrainimage', function (req, res) {
+app.post('/posttrainimage', cors(issue2options), function (req, res) {
   let options = {
     uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/persons',
     body: '{"name": "' + req.body.id + '"}',
@@ -46,7 +48,8 @@ app.post('/posttrainimage', function (req, res) {
   request.post(options, (error, response, body) => {
     if (error) {
       console.log('Error: ', error);
-      res.send(error)
+      // res.send(error)
+      res.json({"error":"error"})
       return;
     }
     let par2 = JSON.parse(body);
@@ -63,7 +66,8 @@ app.post('/posttrainimage', function (req, res) {
     request.post(options2, (error2, response2, body2) => {
       if (error2) {
         console.log('Error: ', error2);
-        res.send(error2)
+        // res.send(error2)
+        res.json({"error":"error2"})
         return;
       }
       let options3 = {
@@ -78,7 +82,7 @@ app.post('/posttrainimage', function (req, res) {
           res.send(error3)
           return;
         }
-        res.send(response3.statusCode)
+        res.json(par2)
       });
       // {"persistedFaceId":"c2aac01b-ce86-4179-a47f-3c4b9d430d8
       //{"persistedFaceId":"3f6e9828-1802-43d8-9801-114af362d11c"}
@@ -87,6 +91,223 @@ app.post('/posttrainimage', function (req, res) {
 
 });
 
+app.post('/updatetrainimage', cors(issue2options), function (req, res) {
+ 
+    // console.log(par3); //{ personId: 'c244aa5d-0973-4665-8ac1-16ac9bfca564' }
+    //{ personId: 'afd06242-8bef-4118-8696-b39093dd0247' }
+    console.log("start",req.body)
+    let options2 = {
+      uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/persons/' + req.body.faceid + '/persistedFaces?detectionModel=detection_02',
+      headers: {
+
+        'Ocp-Apim-Subscription-Key': subscriptionKey
+      },
+      body: '{"url": ' + '"' + req.body.imageUrl + '"}',
+    };
+    request.post(options2, (error2, response2, body2) => {
+      if (error2) {
+        console.log('Error: ', error2);
+        // res.send(error2)
+        res.json({"error":"error2"})
+        return;
+      }
+      // console.log("post1",response2);
+      let options3 = {
+        uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/train',
+        headers: {
+          'Ocp-Apim-Subscription-Key': subscriptionKey
+        }
+      };
+      request.post(options3, (error3, response3, body3) => {
+        if (error3) {
+          console.log('Error: ', error3);
+          // res.send(error3)
+          res.json({"error":"error3"})
+          return;
+        }
+        // console.log("post2",response3);
+        res.json({"RESP_CODE":200})
+      });
+      // {"persistedFaceId":"c2aac01b-ce86-4179-a47f-3c4b9d430d8
+      //{"persistedFaceId":"3f6e9828-1802-43d8-9801-114af362d11c"}
+    });
+
+
+});
+
+
+app.get('/attendance', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("checkin");
+    // try{
+    dbo.collection("checkattendance").find().project({ _id: 0 }).toArray(function (err, result) {
+      if (err) res.json("[]");
+
+
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+app.get('/attendance/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("checkin");
+    // try{
+    var query = { id: req.params.id };
+    dbo.collection("checkattendance").find(query).project({ _id: 0 }).toArray(function (err, result) {
+      if (err) res.json("[]");
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+// app.get('/alldeletecheckin', cors(issue2options), function (req, res) {
+
+//   const uri = "mongodb://localhost:27017/";
+//   //, { useNewUrlParser: true }
+//   const client = new MongoClient.connect(uri, function (err, db) {
+//     //console.log("connext");
+//     if (err) res.json("[]");
+//     var dbo = db.db("checkin");
+//     // try{
+//     var query = { id: req.params.id };
+//     // dbo.collection("checkattendance").find(query).project({ _id: 0 }).toArray(function (err, result) {
+//     //   if (err) res.json("[]");
+//     //   res.json(result);
+//     //   db.close();
+//     // });
+//     var data = [];
+//     let itemsProcessed = 0;
+//     function callback() {
+//       // console.log('hi');
+//       res.json(data);
+//       db.close();
+
+//     }
+//     dbo.listCollections().toArray(function (err, c) {
+//       // console.log("c",c)
+//       // console.log(c.length)
+//       c.forEach(namm => {
+
+//         dbo.collection(namm.name).drop(function(err,delOK){
+//           // console.log(namm.name);
+//           // printjson(d)
+//           // console.log(itemsProcessed)
+//           // console.log(result)
+        
+
+
+//         })
+//       })
+//       // res.json(data);
+//     })
+
+//   });
+// });
+
+
+app.get('/attendanceimage/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("checkin");
+    // try{
+    var query = { id: req.params.id };
+    // dbo.collection("checkattendance").find(query).project({ _id: 0 }).toArray(function (err, result) {
+    //   if (err) res.json("[]");
+    //   res.json(result);
+    //   db.close();
+    // });
+    var data = [];
+    let itemsProcessed = 0;
+    function callback() {
+      // console.log('hi');
+      res.json(data);
+      db.close();
+
+    }
+    dbo.listCollections().toArray(function (err, c) {
+      // console.log("c",c)
+      // console.log(c.length)
+      c.forEach(namm => {
+
+        dbo.collection(namm.name).find(query).project({ _id: 0 }).toArray(async function (err, result) {
+          // console.log(namm.name);
+          // printjson(d)
+          // console.log(itemsProcessed)
+          // console.log(result)
+          if (namm.name != 'checkattendance') {
+            data = await [...data, ...result];
+            // console.log("data",data);
+            if (data) {
+              itemsProcessed++;
+              // console.log(itemsProcessed)
+              if (itemsProcessed === c.length) {
+                callback();
+
+              }
+            }
+          } else {
+            itemsProcessed++;
+            if (itemsProcessed === c.length) {
+              callback();
+
+            }
+          }
+
+
+        })
+      })
+      // res.json(data);
+    })
+
+  });
+});
+
+
+app.get('/getmeaprofilebyid/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("mea");
+    // try{
+    var query = { id: req.params.id };
+    dbo.collection("profile").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      if (result[0].encimage != "" && result[0].encimage != null) {
+        // console.log(item.encimmage);
+        var bytes = CryptoJS.AES.decrypt(result[0].encimage, 'meaprofilepic');
+        result[0]['encimage'] = bytes.toString(CryptoJS.enc.Utf8);
+      }
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
 
 app.get('/gethistoricalemo', cors(issue2options), function (req, res) {
 
@@ -97,7 +318,7 @@ app.get('/gethistoricalemo', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("historical");
     // try{
-    dbo.collection("emo").find().project({_id: 0}).toArray(function (err, result) {
+    dbo.collection("emo").find().project({ _id: 0 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
       // result.forEach(function (item) {
@@ -115,6 +336,344 @@ app.get('/gethistoricalemo', cors(issue2options), function (req, res) {
     // //console.log(err.stack);
     // res.json("[]");}
   });
+});
+
+app.get('/gethistoricaltop', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("historical");
+    // try{
+    dbo.collection("top").find().project({ _id: 0 }).toArray(function (err, result) {
+      if (err) res.json("[]");
+      let value = {}
+      result.forEach(function (item) {
+        if (value[item.thebest] == null) {
+          console.log(item.thebest)
+          value[item.thebest] = { "thebest": 1, "happiness": 0, "mealover": 0, "total": 1 }
+          // console.log(strb);
+          // let objb = JSON.parse(strb);
+          // value.push(objb)
+          console.log(value);
+          if (value[item.happiness] == null) {
+            // value[item.mealover] = { "thebest": 0, "happiness": 0,"mealover": 1 }
+            // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
+            // let objh = JSON.parse(strh);
+            value[item.happiness] = { "thebest": 0, "happiness": 1, "mealover": 0, "total": 1 }
+            if (value['' + item.mealover] == null) {
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+          } else {
+            value['' + item.happiness]['happiness']++;
+            value['' + item.happiness]['total']++;
+            if (value['' + item.mealover] == null) {
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+
+          }
+        } else {
+          value['' + item.thebest]['thebest']++;
+          value['' + item.thebest]['total']++;
+          console.log(value['' + item.thebest]);
+          if (value['' + item.happiness] == null) {
+            value[item.happiness] = { "thebest": 0, "happiness": 1, "mealover": 0, "total": 1 }
+            // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
+            // let objh = JSON.parse(strh);
+            // value.push(objh)
+            if (value['' + item.mealover] == null) {
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+          } else {
+            value['' + item.happiness]['happiness']++;
+            value['' + item.happiness]['total']++;
+            if (value['' + item.mealover] == null) {
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+
+          }
+        }
+      });
+      res.json(value);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+app.get('/gethistoricaltop/:from/:to', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("historical");
+    // try{
+    let qr = {
+      dateint: {
+        $gte: parseInt(req.params.from),
+        $lte: parseInt(req.params.to)
+      }
+    }
+    dbo.collection("top").find(qr).project({ _id: 0 }).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      let value = {}
+      result.forEach(function (item) {
+
+        if (value[item.thebest] == null) {
+          console.log(item.thebest)
+          value[item.thebest] = { "thebest": 1, "happiness": 0, "mealover": 0, "total": 1 }
+          // console.log(strb);
+          // let objb = JSON.parse(strb);
+          // value.push(objb)
+          console.log(value);
+          if (value[item.happiness] == null) {
+            // value[item.mealover] = { "thebest": 0, "happiness": 0,"mealover": 1 }
+            // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
+            // let objh = JSON.parse(strh);
+            value[item.happiness] = { "thebest": 0, "happiness": 1, "mealover": 0, "total": 1 }
+            if (value['' + item.mealover] == null) {
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+          } else {
+            value['' + item.happiness]['happiness']++;
+            value['' + item.happiness]['total']++;
+            if (value['' + item.mealover] == null) {
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+
+          }
+        } else {
+          value['' + item.thebest]['thebest']++;
+          value['' + item.thebest]['total']++;
+          console.log(value['' + item.thebest]);
+          if (value['' + item.happiness] == null) {
+            value[item.happiness] = { "thebest": 0, "happiness": 1, "mealover": 0, "total": 1 }
+            // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
+            // let objh = JSON.parse(strh);
+            // value.push(objh)
+            if (value['' + item.mealover] == null) {
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+          } else {
+            value['' + item.happiness]['happiness']++;
+            value['' + item.happiness]['total']++;
+            if (value['' + item.mealover] == null) {
+              value[item.mealover] = { "thebest": 0, "happiness": 0, "mealover": 1, "total": 1 }
+              // let strm = '{"' + item.mealover + '": { "thebest": 0, "happiness": 0,"mealover":1  }}'
+              // let objm = JSON.parse(strm);
+              // value.push(objm)
+
+            } else {
+
+              value['' + item.mealover]['mealover']++;
+              value['' + item.mealover]['total']++;
+
+            }
+
+          }
+        }
+      });
+      res.json(value);
+      // console.log(value);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+
+var moment = require('moment');
+
+function whileexport(from, to, callback) {
+  var a = moment(from);
+  var b = moment(to);
+  let ret = []
+
+  for (var m = moment(a); m.isBefore(b); m.add(1, 'days')) {
+    // console.log('moment'+m.format('YYYY-MM-DD'));
+    ret.push(m.format('YYYY-MM-DD'));
+  }
+  // console.log(ret);
+  callback(null, ret);
+
+}
+
+function pusharray(resp, result, callback) {
+
+  callback(null, [...resp, ...result]);
+
+}
+app.get('/getexport/:from/:to', cors(issue2options), function (req, res) {
+
+  // var from = new Date(req.params.from);
+  // var to = new Date(req.params.to);
+  const uri = "mongodb://localhost:27017/";
+  // var date_ob = from;
+
+  // console.log(from);
+  // console.log(to);
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //   //console.log("connext");
+    //   if (err) res.json("[]");
+    var resp = [];
+
+
+    const dbo = db.db("checkin");
+    let list_date = whileexport(req.params.from, req.params.to, function (err, ret) {
+      //This code gets run after the async operation gets run
+      function callback() {
+        // console.log('hi');
+        res.json(resp);
+        db.close();
+
+      }
+      var itemsProcessed = 0;
+      console.log(ret.length)
+      ret.forEach((dateob, index, array) => {
+        // console.log(dateob);
+        let date_ob = new Date(dateob);
+        date_ob.setDate(date_ob.getDate() + 1);
+        let date = ("0" + date_ob.getDate()).slice(-2);
+
+        // current month
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+        // current year
+        let year = date_ob.getFullYear();
+
+        dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(async function (err, result) {
+          if (err) res.json("[]");
+          //console.log(result);
+          // resp.concat(result) 
+          resp = await [...resp, ...result]
+          // console.log('hi' + dateob);
+          if (resp) {
+            itemsProcessed++;
+            // console.log(itemsProcessed)
+            if (itemsProcessed === array.length) {
+              callback();
+
+            }
+          }
+
+          // if(dateob.getTime() === to.getTime()) {
+          // res.json(resp);
+          // db.close();
+          // } 
+        });
+      })
+      // console.log('hi');
+      // res.json(resp);
+      // dbo.close();
+
+    });
+
+
+  });
+
+  // const client = new  MongoClient.connect(uri, function (err, db) {
+  //   //console.log("connext");
+  //   if (err) res.json("[]");
+  //   var resp = [];
+  //   var dbo = db.db("checkin");
+  //   while(date_ob <= to){
+  //     // console.log(date_ob);
+  //     // console.log(date_ob.getTime() === to.getTime());
+  //     let dateob = new Date(date_ob);
+  //     let date = ("0" + date_ob.getDate()).slice(-2);
+
+  // // current month
+  //     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+  // // current year
+  //     let year = date_ob.getFullYear();
+
+  //     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
+  //       if (err) res.json("[]");
+  //       //console.log(result);
+  //       // resp.concat(result) 
+  //       resp =[...resp, ...result]
+  //       console.log('hi'+dateob);
+  //       if(dateob.getTime() === to.getTime()) {
+  //       res.json(resp);
+  //       db.close();
+  //       } 
+  //     });
+  //     date_ob.setDate(date_ob.getDate()+1);
+  //   };
+
+
+  //   // }catch(err){
+  //   // //console.log(err.stack);
+  //   // res.json("[]");}
+  // });
+
 });
 
 app.get('/gethistoricalcheckin', cors(issue2options), function (req, res) {
@@ -126,7 +685,7 @@ app.get('/gethistoricalcheckin', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("historical");
     // try{
-    dbo.collection("checkin").find().project({_id: 0}).toArray(function (err, result) {
+    dbo.collection("checkin").find().project({ _id: 0 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
       // result.forEach(function (item) {
@@ -146,6 +705,176 @@ app.get('/gethistoricalcheckin', cors(issue2options), function (req, res) {
   });
 });
 
+app.get('/getnotification', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // try{
+    dbo.collection("notification").find().toArray(function (err, result) {
+      if (err) res.json("[]");
+
+      res.json(result);
+      db.close();
+    });
+  });
+});
+
+app.post('/postnotification', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var myobj = { email: req.body.email };
+    dbo.collection("notification").insertOne(myobj, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+app.delete('/deletenotification/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var query = { _id: ObjectId(req.params.id) };
+    dbo.collection("notification").deleteMany(query, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+
+app.post('/postaccount', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var myobj = { username: req.body.username, password: req.body.password };
+    dbo.collection("account").insertOne(myobj, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+app.post('/postaccount/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // try{
+    var query = { _id: ObjectId(req.params.id) };
+    var newvalues = { $set: { password: req.body.password } };
+    dbo.collection("account").updateOne(query, newvalues, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+app.delete('/deleteaccount/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var query = { _id: ObjectId(req.params.id) };
+    dbo.collection("account").deleteMany(query, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+app.get('/getaccount', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // try{
+    dbo.collection("account").find().project({ password: 0 }).toArray(function (err, result) {
+      if (err) res.json("[]");
+
+      res.json(result);
+      db.close();
+    });
+  });
+});
+
+app.get('/getlogin/:username/:password', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    var query = { username: req.params.username };
+    dbo.collection("account").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      if (result.length > 0) {
+        if (result[0].password === req.params.password) {
+          res.json({ result: true });
+        } else {
+          res.json({ result: false });
+        }
+      } else {
+        res.json({ result: false });
+      }
+      db.close();
+    });
+  });
+});
+
+
 app.get('/getmeaprofile', cors(issue2options), function (req, res) {
 
   const uri = "mongodb://localhost:27017/";
@@ -155,7 +884,7 @@ app.get('/getmeaprofile', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("mea");
     // try{
-    dbo.collection("profile").find().project({encimage: 0}).toArray(function (err, result) {
+    dbo.collection("profile").find().project({ encimage: 0 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
       // result.forEach(function (item) {
@@ -210,8 +939,8 @@ app.get('/getimagebyid/:id', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("mea");
     // try{
-      var query = { id: req.params.id };
-      dbo.collection("profile").find(query).toArray(function (err, result) {
+    var query = { id: req.params.id };
+    dbo.collection("profile").find(query).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
       result.forEach(function (item) {
@@ -304,7 +1033,7 @@ app.post('/postmeaprofile/:id', cors(issue2options), function (req, res) {
     var dbo = db.db("mea");
     // try{
     var query = { _id: ObjectId(req.params.id) };
-    var newvalues = { $set: { title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position } };
+    var newvalues = { $set: { title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position} };
     dbo.collection("profile").updateOne(query, newvalues, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
@@ -349,9 +1078,9 @@ app.post('/postmeaprofile', cors(issue2options), function (req, res) {
     //console.log("connext");
     if (err) res.json("[]");
     var dbo = db.db("mea");
-    // console.log("req", req.body);
+    console.log("req", req.body);
     // res.send(req.body);
-    var myobj = { id: req.body.id, title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position, image: req.body.image };
+    var myobj = { id: req.body.id, title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position, image: req.body.image, faceid: req.body.faceid , encimage: req.body.encimage };
     dbo.collection("profile").insertOne(myobj, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
@@ -423,7 +1152,7 @@ app.get('/getmeadefault/:id', cors(issue2options), function (req, res) {
       // console.log(result[0].year);
       // console.log(parseInt(result[0].year));
       // console.log(year - parseInt(result[0].year));
-      result[0].age = year - parseInt(result[0].year) -1958;
+      result[0].age = year - parseInt(result[0].year) - 1958;
       res.json(result);
       db.close();
     });
@@ -433,7 +1162,7 @@ app.get('/getmeadefault/:id', cors(issue2options), function (req, res) {
   });
 });
 
-app.get('/getcropimage/:id', cors(issue2options), function (req, res) {
+app.get('/getcropimage/:name', cors(issue2options), function (req, res) {
 
   const uri = "mongodb://localhost:27017/";
   //, { useNewUrlParser: true }
@@ -442,10 +1171,11 @@ app.get('/getcropimage/:id', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("image");
     // try{
-    var query = { id: req.params.id };
+    var query = { name: req.params.name };
     dbo.collection("crop").find(query).toArray(function (err, result) {
       if (err) res.json("[]");
-      var rawData = atob(result[0].date);
+      console.log(result);
+      var rawData = atob(result[0].data);
 
 
       var iv = rawData.substring(0, 16);
@@ -883,12 +1613,8 @@ app.get('/getdailyworktime', function (req, res) {
 
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
-      //console.log(result);
-      // console.log(j);
-      // let maxhh = 0;
-      // let maxmm = 0;
-      let checkouthh = date_ob.getHours();;
-      let checkoutmm = date_ob.getMinutes();
+      let checkouthh = 22;//date_ob.getHours();
+      let checkoutmm = 22;//date_ob.getMinutes();
       var arr = {}
       result.forEach(element => {
 
@@ -903,8 +1629,8 @@ app.get('/getdailyworktime', function (req, res) {
 
         if (parseInt(element.checkindatetime.substring(8, 10)) < 7 || ((parseInt(element.checkindatetime.substring(8, 10)) == 7) && (parseInt(element.checkindatetime.substring(10, 12)) < 41))) {
           arr[element.id] = ((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
-        }else {
-          arr[element.id] = -1* (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
+        } else {
+          arr[element.id] = -1 * (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
         }
 
         // } else {
@@ -915,7 +1641,6 @@ app.get('/getdailyworktime', function (req, res) {
         // }
       });
 
-      // console.log("done");
       res.json(arr);
       db.close();
 
