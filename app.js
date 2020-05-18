@@ -1614,7 +1614,7 @@ app.get('/getdailyworktime', function (req, res) {
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
       
-      let checkouthh = date_ob.getHours();
+      let checkouthh = date_ob.getHours()+7;
       let checkoutmm = date_ob.getMinutes();
       
       var arr = {}
@@ -1626,18 +1626,18 @@ app.get('/getdailyworktime', function (req, res) {
           checkoutmm = parseInt(element.checkoutdatetime.substring(10, 12));
 
         }
-        console.log("hh",checkouthh)
-        console.log("hh",checkoutmm)
+        // console.log("hh",checkouthh)
+        // console.log("hh",checkoutmm)
         // if ((  checkouthh- parseInt(element.checkindatetime.substring(8, 10)) > maxhh ) || ((checkouthh -  parseInt(element.checkindatetime.substring(8, 10)) == maxhh) && ( checkoutmm - parseInt(element.checkindatetime.substring(10, 12)) > checkoutmm))) {
         // if (arr[element.id] == null) {
-        console.log(element.checkindatetime.substring(8, 10));
+        // console.log(element.checkindatetime.substring(8, 10));
         if (parseInt(element.checkindatetime.substring(8, 10)) < 7 || ((parseInt(element.checkindatetime.substring(8, 10)) == 7) && (parseInt(element.checkindatetime.substring(10, 12)) < 41))) {
-          console.log("why")
+          // console.log("why")
           arr[element.id] = ((checkouthh - p152arseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
         } else {
-          console.log("ok")
-          console.log(((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) );
-          console.log((checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
+          // console.log("ok")
+          // console.log(((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) );
+          // console.log((checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
           
           arr[element.id] = -1 * (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
         }
