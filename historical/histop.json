@@ -1,0 +1,15 @@
+{"_id":{"$oid":"5ec0f7e554246110892475e6"},"dateint":20200420,"thebest":"1674425","happiness":"2170413","mealover":"1674425"}
+{"_id":{"$oid":"5ec0f88de736df11791c3d8b"},"dateint":20200421,"thebest":"2517025","happiness":null,"mealover":"2517025"}
+{"_id":{"$oid":"5ec0f9119430a6121398c22b"},"dateint":20200422,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0f9595d8d0c12833ffdac"},"dateint":20200423,"thebest":"1537934","happiness":"2506425","mealover":"1674425"}
+{"_id":{"$oid":"5ec0f9c7cdc1f1130e72b068"},"dateint":20200424,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fa27c897e813d0a65cc2"},"dateint":20200427,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fa886f31fb14506d9dec"},"dateint":20200428,"thebest":"1537934","happiness":"1976807","mealover":"1537934"}
+{"_id":{"$oid":"5ec0fac6beb15414bdf0534a"},"dateint":20200429,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fb2554380715355451c6"},"dateint":20200430,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fb5f4dc36e158eb0fa33"},"dateint":20200501,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fb795f851915bc3c5566"},"dateint":20200504,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fbd82b541c16436f86f5"},"dateint":20200505,"thebest":"1433018","happiness":"2515908","mealover":"1433018"}
+{"_id":{"$oid":"5ec0fc2c5365a216bf1b2445"},"dateint":20200506,"thebest":null,"happiness":null,"mealover":null}
+{"_id":{"$oid":"5ec0fc76be3d3b172b4f1b16"},"dateint":20200507,"thebest":"2311622","happiness":"1433406","mealover":"1433406"}
+{"_id":{"$oid":"5ec0fce2e2f13e17cacf8e56"},"dateint":20200508,"thebest":"1433406","happiness":"2170413","mealover":"2170413"}
