@@ -1632,6 +1632,9 @@ app.get('/getdailyworktime', function (req, res) {
           arr[element.id] = ((checkouthh - p152arseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12)));
         } else {
           console.log("ok")
+          console.log(((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) );
+          console.log((checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
+          
           arr[element.id] = -1 * (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
         }
 
