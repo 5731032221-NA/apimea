@@ -1613,8 +1613,10 @@ app.get('/getdailyworktime', function (req, res) {
 
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
+      
       let checkouthh = date_ob.getHours();
       let checkoutmm = date_ob.getMinutes();
+      
       var arr = {}
       result.forEach(element => {
 
@@ -1624,6 +1626,8 @@ app.get('/getdailyworktime', function (req, res) {
           checkoutmm = parseInt(element.checkoutdatetime.substring(10, 12));
 
         }
+        console.log("hh",checkouthh)
+        console.log("hh",checkoutmm)
         // if ((  checkouthh- parseInt(element.checkindatetime.substring(8, 10)) > maxhh ) || ((checkouthh -  parseInt(element.checkindatetime.substring(8, 10)) == maxhh) && ( checkoutmm - parseInt(element.checkindatetime.substring(10, 12)) > checkoutmm))) {
         // if (arr[element.id] == null) {
         console.log(element.checkindatetime.substring(8, 10));
