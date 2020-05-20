@@ -91,6 +91,110 @@ app.post('/posttrainimage', cors(issue2options), function (req, res) {
 
 });
 
+
+
+
+app.post('/removefaceapi', cors(issue2options), function (req, res) {
+
+
+  // console.log("start",req.body)
+  let options2 = {
+    uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/persons/' + req.body.faceid,
+    headers: {
+
+      'Ocp-Apim-Subscription-Key': subscriptionKey
+    },
+    // body: '{"url": ' + '"' + req.body.imageUrl + '"}',
+  };
+  request.delete(options2, (error2, response2, body2) => {
+    if (error2) {
+      console.log('Error: ', error2);
+      // res.send(error2)
+      res.json({ "error": "error2" })
+      return;
+    }
+    // console.log("post1",response2);
+    let options3 = {
+      uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/train',
+      headers: {
+        'Ocp-Apim-Subscription-Key': subscriptionKey
+      }
+    };
+    request.post(options3, (error3, response3, body3) => {
+      if (error3) {
+        console.log('Error: ', error3);
+        // res.send(error3)
+        res.json({ "error": "error3" })
+        return;
+      }
+      // console.log("post2",response3);
+      res.json({ "RESP_CODE": 200 })
+    });
+
+  });
+
+
+});
+
+app.post('/adddefault', cors(issue2options), function (req, res) {
+
+  const params = {
+    'returnFaceId': 'true',
+    'returnFaceLandmarks': 'false',
+    'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,' +
+      'emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
+  };
+  // console.log("start",req.body)
+  const uriBase = 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/detect';
+  const options = {
+    uri: uriBase,
+    qs: params,
+    body: '{"url": ' + '"' + req.body.url + '"}',
+    headers: {
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': subscriptionKey
+    }
+  };
+  request.post(options, (error, response, body) => {
+    if (error) {
+      console.log('Error: ', error);
+      return;
+    }
+    //   let jsonResponse = JSON.stringify(JSON.parse(body), null, '  ');
+    let par = JSON.parse(body);
+    // console.log('JSON Response\n');
+    // console.log(par)
+    // console.log(par[0].faceId);
+    // res.json(par);
+    const uri = "mongodb://localhost:27017/";
+    //, { useNewUrlParser: true }
+    const client = new MongoClient.connect(uri, function (err, db) {
+      //console.log("connext");
+      if (err) res.json("[]");
+      var dbo = db.db("mea");
+      // res.send(req.body);
+      // var myobj = { id: req.params.id,"lastid": true };
+      dbo.collection("default").updateOne(
+        { "id": req.body.id },
+        { $set: { "id": req.body.id, "gender": par[0].faceAttributes.gender, "margin": 0, year: 62 - par[0].faceAttributes.age } },
+        //
+        { upsert: true }
+        , function (err, result) {
+          if (err) res.send(err);
+          //console.log(result);
+          res.json(result);
+          db.close();
+        });
+
+
+    });
+
+
+  });
+});
+
+
+
 app.post('/updatetrainimage', cors(issue2options), function (req, res) {
  
     // console.log(par3); //{ personId: 'c244aa5d-0973-4665-8ac1-16ac9bfca564' }
