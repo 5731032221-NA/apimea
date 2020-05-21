@@ -1093,7 +1093,7 @@ app.get('/getuserprofile/:id', cors(issue2options), function (req, res) {
     var dbo = db.db("mea");
     // try{
     var query = { id: req.params.id };
-    dbo.collection("profile").find(query).toArray(function (err, result) {
+    dbo.collection("profile").find(query).project({ encimage: 0 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
       res.json(result);
