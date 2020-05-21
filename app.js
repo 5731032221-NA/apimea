@@ -11,7 +11,7 @@ const CryptoJS = require("crypto-js");
 // const bodyParser = require('body-parser')
 var ObjectId = require('mongodb').ObjectID;
 var master_key = 'meafacialkeycam1';
-app.use(express.json({limit: '50mb'}))
+app.use(express.json({ limit: '50mb' }))
 // app.use(express.urlencoded({limit: '50mb'}));
 const subscriptionKey = '99d0310d30c24046a148cbf795a34121';
 const issue2options = {
@@ -49,7 +49,7 @@ app.post('/posttrainimage', cors(issue2options), function (req, res) {
     if (error) {
       console.log('Error: ', error);
       // res.send(error)
-      res.json({"error":"error"})
+      res.json({ "error": "error" })
       return;
     }
     let par2 = JSON.parse(body);
@@ -67,7 +67,7 @@ app.post('/posttrainimage', cors(issue2options), function (req, res) {
       if (error2) {
         console.log('Error: ', error2);
         // res.send(error2)
-        res.json({"error":"error2"})
+        res.json({ "error": "error2" })
         return;
       }
       let options3 = {
@@ -196,45 +196,45 @@ app.post('/adddefault', cors(issue2options), function (req, res) {
 
 
 app.post('/updatetrainimage', cors(issue2options), function (req, res) {
- 
-    // console.log(par3); //{ personId: 'c244aa5d-0973-4665-8ac1-16ac9bfca564' }
-    //{ personId: 'afd06242-8bef-4118-8696-b39093dd0247' }
-    console.log("start",req.body)
-    let options2 = {
-      uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/persons/' + req.body.faceid + '/persistedFaces?detectionModel=detection_02',
-      headers: {
 
+  // console.log(par3); //{ personId: 'c244aa5d-0973-4665-8ac1-16ac9bfca564' }
+  //{ personId: 'afd06242-8bef-4118-8696-b39093dd0247' }
+  console.log("start", req.body)
+  let options2 = {
+    uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/persons/' + req.body.faceid + '/persistedFaces?detectionModel=detection_02',
+    headers: {
+
+      'Ocp-Apim-Subscription-Key': subscriptionKey
+    },
+    body: '{"url": ' + '"' + req.body.imageUrl + '"}',
+  };
+  request.post(options2, (error2, response2, body2) => {
+    if (error2) {
+      console.log('Error: ', error2);
+      // res.send(error2)
+      res.json({ "error": "error2" })
+      return;
+    }
+    // console.log("post1",response2);
+    let options3 = {
+      uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/train',
+      headers: {
         'Ocp-Apim-Subscription-Key': subscriptionKey
-      },
-      body: '{"url": ' + '"' + req.body.imageUrl + '"}',
+      }
     };
-    request.post(options2, (error2, response2, body2) => {
-      if (error2) {
-        console.log('Error: ', error2);
-        // res.send(error2)
-        res.json({"error":"error2"})
+    request.post(options3, (error3, response3, body3) => {
+      if (error3) {
+        console.log('Error: ', error3);
+        // res.send(error3)
+        res.json({ "error": "error3" })
         return;
       }
-      // console.log("post1",response2);
-      let options3 = {
-        uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/train',
-        headers: {
-          'Ocp-Apim-Subscription-Key': subscriptionKey
-        }
-      };
-      request.post(options3, (error3, response3, body3) => {
-        if (error3) {
-          console.log('Error: ', error3);
-          // res.send(error3)
-          res.json({"error":"error3"})
-          return;
-        }
-        // console.log("post2",response3);
-        res.json({"RESP_CODE":200})
-      });
-      // {"persistedFaceId":"c2aac01b-ce86-4179-a47f-3c4b9d430d8
-      //{"persistedFaceId":"3f6e9828-1802-43d8-9801-114af362d11c"}
+      // console.log("post2",response3);
+      res.json({ "RESP_CODE": 200 })
     });
+    // {"persistedFaceId":"c2aac01b-ce86-4179-a47f-3c4b9d430d8
+    //{"persistedFaceId":"3f6e9828-1802-43d8-9801-114af362d11c"}
+  });
 
 
 });
@@ -312,7 +312,7 @@ app.get('/attendance/:id', cors(issue2options), function (req, res) {
 //           // printjson(d)
 //           // console.log(itemsProcessed)
 //           // console.log(result)
-        
+
 
 
 //         })
@@ -1137,7 +1137,7 @@ app.post('/postmeaprofile/:id', cors(issue2options), function (req, res) {
     var dbo = db.db("mea");
     // try{
     var query = { _id: ObjectId(req.params.id) };
-    var newvalues = { $set: { title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position} };
+    var newvalues = { $set: { title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position } };
     dbo.collection("profile").updateOne(query, newvalues, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
@@ -1184,7 +1184,7 @@ app.post('/postmeaprofile', cors(issue2options), function (req, res) {
     var dbo = db.db("mea");
     console.log("req", req.body);
     // res.send(req.body);
-    var myobj = { id: req.body.id, title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position, image: req.body.image, faceid: req.body.faceid , encimage: req.body.encimage };
+    var myobj = { id: req.body.id, title: req.body.title, name: req.body.name, surname: req.body.surname, email: req.body.email, position: req.body.position, image: req.body.image, faceid: req.body.faceid, encimage: req.body.encimage };
     dbo.collection("profile").insertOne(myobj, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
@@ -1508,6 +1508,27 @@ app.get('/mock', function (req, res) {
 
 });
 
+app.get('/removedetectbydate/:date', function (req, res) {
+
+  //console.log("getcheckin");
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("checkin");
+    //var dbo = db.db("mea");
+
+    //dbo.collection("checkattendance").drop(function(err,delOK){
+    dbo.collection("checkin." + req.params.date).drop(function (err, delOK) {
+      // dbo.collection("lastid").drop(function(err,delOK){
+      if (err) throw err;
+      if (delOK) res.send("Collection deleted");
+      db.close();
+    });
+  });
+
+});
+
 app.get('/removedetect', function (req, res) {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
@@ -1717,10 +1738,10 @@ app.get('/getdailyworktime', function (req, res) {
 
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
-      
-      let checkouthh = date_ob.getHours()+7;
+
+      let checkouthh = date_ob.getHours() + 7;
       let checkoutmm = date_ob.getMinutes();
-      
+
       var arr = {}
       result.forEach(element => {
 
@@ -1742,7 +1763,7 @@ app.get('/getdailyworktime', function (req, res) {
           // console.log("ok")
           // console.log(((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) );
           // console.log((checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
-          
+
           arr[element.id] = -1 * (((checkouthh - parseInt(element.checkindatetime.substring(8, 10))) * 60) + (checkoutmm - parseInt(element.checkindatetime.substring(10, 12))));
         }
 
