@@ -2185,38 +2185,38 @@ app.get('/getgrapghperiod', cors(issue2options), function (req, res) {
 
       for (let i = 0; i < result.length; i++) {
         if ((result[i].checkin).substring(0, 2) == "05" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "06" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "07" ) { (period[1].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "08" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "09" ) { (period[2].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "10" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "11" ) { (period[3].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "12" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "13" ) { (period[4].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "14" ) { (period[5].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "15" ) { (period[5].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "16" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "17" ) { (period[6].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "18" ) { (period[0].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "19" ) { (period[7].in)++; }
-        if ((result[i].checkin).substring(0, 2) == "20" ) { (period[0].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "06" ) { (period[1].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "07" ) { (period[2].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "08" ) { (period[3].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "09" ) { (period[4].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "10" ) { (period[5].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "11" ) { (period[6].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "12" ) { (period[7].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "13" ) { (period[8].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "14" ) { (period[9].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "15" ) { (period[10].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "16" ) { (period[11].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "17" ) { (period[12].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "18" ) { (period[13].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "19" ) { (period[14].in)++; }
+        if ((result[i].checkin).substring(0, 2) == "20" ) { (period[15].in)++; }
 
         if ((result[i].checkout).substring(0, 2) == "05" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "06" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "07" ) { (period[1].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "08" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "09" ) { (period[2].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "10" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "11" ) { (period[3].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "12" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "13" ) { (period[4].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "14" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "15" ) { (period[5].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "16" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "17" ) { (period[6].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "18" ) { (period[0].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "19" ) { (period[7].out)++; }
-        if ((result[i].checkout).substring(0, 2) == "20" ) { (period[0].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "06" ) { (period[1].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "07" ) { (period[2].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "08" ) { (period[3].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "09" ) { (period[4].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "10" ) { (period[5].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "11" ) { (period[6].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "12" ) { (period[7].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "13" ) { (period[8].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "14" ) { (period[9].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "15" ) { (period[10].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "16" ) { (period[11].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "17" ) { (period[12].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "18" ) { (period[13].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "19" ) { (period[14].out)++; }
+        if ((result[i].checkout).substring(0, 2) == "20" ) { (period[15].out)++; }
       }
       //console.log(period);
       res.json(period);
