@@ -2936,6 +2936,7 @@ app.get('/getcountexitbygender/:gender/:happy', cors(issue2options), function (r
 
 
 
+
 app.get('/getemograph', cors(issue2options), function (req, res) {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
@@ -2957,7 +2958,276 @@ app.get('/getemograph', cors(issue2options), function (req, res) {
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
 
-      if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+      let period = [
+        { "time": 6, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 7, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 8, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 9, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 10, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 11, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 12, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 13, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 14, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 15, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 16, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 17, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 18, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 19, "happy": 0, "unhappy": 0, "neutral": 0 },
+        { "time": 20, "happy": 0, "unhappy": 0, "neutral": 0 }];
+
+      console.log(result);
+      for (let i = 0; i < result.length; i++) {
+        let emotion1 = result[i].checkinEmotion.emotion;
+        let emotion2 = result[i].checkoutEmotion.emotion;
+
+        //console.log("emo:", emotion1);
+        let maxProp = null
+        let maxValue = -1
+        let secProp = null
+        let secValue = -1
+
+        let maxProp2 = null
+        let maxValue2 = -1
+        let secProp2 = null
+        let secValue2 = -1
+
+        for (var prop in emotion1) {
+          if (emotion1.hasOwnProperty(prop)) {
+
+            let value = emotion1[prop]
+            if (value > maxValue) {
+              secValue = maxValue;
+              secProp = maxProp
+              maxValue = value;
+              maxProp = prop
+            } else if (secValue < value) {
+              secValue = value;
+              secProp = prop
+            }
+          }
+        }
+        if (maxProp == 'neutral') {
+          if (maxValue == 1) {
+            if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[0].neutral)++; }
+          }
+          else if (maxValue < 1) {
+            if (secProp == 'anger') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+              }
+            else if (secProp == 'contempt') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+            }
+            else if (secProp == 'disgust') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+              }
+            else if (secProp == 'fear') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+            }
+            else if (secProp == 'happiness') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+                   }
+            else if (secProp == 'sadness') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+           }
+            else if (secProp == 'surprise') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+                  }
+          }
+        }
+        else if (maxProp == 'anger') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+           }
+        else if (maxProp == 'contempt') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+              }
+        else if (maxProp == 'disgust') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+            }
+        else if (maxProp == 'fear') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+             }
+        else if (maxProp == 'happiness') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
             if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
             if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
             if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
@@ -2973,7 +3243,335 @@ app.get('/getemograph', cors(issue2options), function (req, res) {
             if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
             if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
             if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
-          
+                    }
+        else if (maxProp == 'sadness') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+              }
+        else if (maxProp == 'surprise') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+                    }
+        for (var prop2 in emotion2) {
+          if (emotion2.hasOwnProperty(prop2)) {
+
+            let value2 = emotion2[prop2]
+            if (value2 > maxValue2) {
+              secValue2 = maxValue2;
+              secProp2 = maxProp2
+              maxValue2 = value2;
+              maxProp2 = prop2
+            } else if (secValue2 < value2) {
+              secValue2 = value2;
+              secProp2 = prop2
+            }
+          }
+        }
+
+        if (maxProp2 == 'neutral') {
+          if (maxValue2 == 1) {
+            if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].neutral)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].neutral)++; }
+             }
+          else if (maxValue2 < 1) {
+            if (secProp2 == 'anger') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+                       }
+            else if (secProp2 == 'contempt') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+                 }
+            else if (secProp2 == 'disgust') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+                         }
+            else if (secProp2 == 'fear') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+                     }
+            else if (secProp2 == 'happiness') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+                  }
+            else if (secProp2 == 'sadness') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+                  }
+            else if (secProp2 == 'surprise') {
+              if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+              if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+                     }
+          }
+        }
+        else if (maxProp2 == 'anger') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+             }
+        else if (maxProp2 == 'contempt') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+              }
+        else if (maxProp2 == 'disgust') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+            }
+        else if (maxProp2 == 'fear') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+                }
+        else if (maxProp2 == 'happiness') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+              }
+        else if (maxProp2 == 'sadness') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].unhappy)--; }
+          if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].unhappy)--; }
+              }
+        else if (maxProp2 == 'surprise') {
+          if ((result[i].checkindatetime).substring(8, 10) == "05" ) { (period[0].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "06" ) { (period[1].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "07" ) { (period[2].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "08" ) { (period[3].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "09" ) { (period[4].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "10" ) { (period[5].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "11" ) { (period[6].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "12" ) { (period[7].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "13" ) { (period[8].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "14" ) { (period[9].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "15" ) { (period[10].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "16" ) { (period[11].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "17" ) { (period[12].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "18" ) { (period[13].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "19" ) { (period[14].happy)++; }
+            if ((result[i].checkindatetime).substring(8, 10) == "20" ) { (period[15].happy)++; }
+                  }
+
+      }
 
       // let happy = happiness + surprise;
       // let unhappy = anger + contempt + disgust + fear + sadness ;
@@ -2989,281 +3587,6 @@ app.get('/getemograph', cors(issue2options), function (req, res) {
 
 });
 
-
-
-app.get('/countemoperiodweek', cors(issue2options), function (req, res) {
-  let date_ob = new Date();
-  let date = ("0" + date_ob.getDate()).slice(-2);
-
-  // current month
-  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
-  // current year
-  let year = date_ob.getFullYear();
-  //console.log("getcheckin");
-  const uri = "mongodb://localhost:27017/";
-  //, { useNewUrlParser: true }
-  const client = new MongoClient.connect(uri, function (err, db) {
-
-    if (err) res.json("[]");
-    var dbo = db.db("checkin");
-    // try{
-    // //console.log("checkin." + year + "-" + month + "-" + date)
-    dbo.collection("checkattendance").find().toArray(function (err, result) {
-      if (err) res.json("[]");
-      let happy = 0, unhappy = 0, neutral = 0;
-
-      let period = [
-        { "day": "28-02-2020", "happy": 24, "unhappy": 13, "neutral": 3 },
-        { "day": "29-02-2020", "happy": 16, "unhappy": 22, "neutral": 2 },
-        { "day": "01-03-2020", "happy": 20, "unhappy": 16, "neutral": 4 },
-        { "day": "02-03-2020", "happy": 25, "unhappy": 10, "neutral": 5 },
-        { "day": "03-03-2020", "happy": 19, "unhappy": 18, "neutral": 3 },
-        { "day": "04-03-2020", "happy": 25, "unhappy": 10, "neutral": 5 },
-        { "day": "05-03-2020", "happy": 0, "unhappy": 0, "neutral": 0 }];
-
-
-      for (let i = 0; i < result.length; i++) {
-        let emotion1 = result[i].checkin.emotion.emotion;
-
-        //console.log("emo:", emotion1);
-        let maxProp = null
-        let maxValue = -1
-        let secProp = null
-        let secValue = -1
-
-        for (var prop in emotion1) {
-          if (emotion1.hasOwnProperty(prop)) {
-
-            let value = emotion1[prop]
-            if (value > maxValue) {
-              secValue = maxValue;
-              secProp = maxProp
-              maxValue = value;
-              maxProp = prop
-            } else if (secValue < value) {
-              secValue = value;
-              secProp = prop
-            }
-          }
-        }
-
-        if (maxProp == 'neutral') {
-          if (maxValue == 1) {
-            period[6].neutral++;
-          }
-          else if (maxValue < 1) {
-            if (secProp == 'anger') period[6].unhappy--;
-            else if (secProp == 'contempt') period[6].unhappy--;
-            else if (secProp == 'disgust') period[6].unhappy--;
-            else if (secProp == 'fear') period[6].unhappy--;
-            else if (secProp == 'happiness') period[6].happy++;
-            else if (secProp == 'sadness') period[6].unhappy--;
-            else if (secProp == 'surprise') period[6].happy++;
-          }
-        }
-        else if (maxProp == 'anger') period[6].unhappy--;
-        else if (maxProp == 'contempt') period[6].unhappy--;
-        else if (maxProp == 'disgust') period[6].unhappy--;
-        else if (maxProp == 'fear') period[6].unhappy--;
-        else if (maxProp == 'happiness') period[6].happy++;
-        else if (maxProp == 'sadness') period[6].unhappy--;
-        else if (maxProp == 'surprise') period[6].happy++;
-
-      }
-
-
-      res.json(period);
-      db.close();
-    });
-    // }catch(err){
-    // //console.log(err.stack);
-    // res.json("[]");}
-  });
-
-});
-
-
-
-app.get('/countemoweek', cors(issue2options), function (req, res) {
-  let date_ob = new Date();
-  let date = (("0" + date_ob.getDate()).slice(-2));
-
-  // current month
-  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
-  // current year
-  let year = date_ob.getFullYear();
-
-  //console.log("getcheckin");
-  const uri = "mongodb://localhost:27017/";
-  //, { useNewUrlParser: true }
-  const client = new MongoClient.connect(uri, function (err, db) {
-    //console.log("connext");
-    if (err) res.json("[]");
-    var dbo = db.db("checkin");
-    let anger = 6,
-      contempt = 41,
-      disgust = 11,
-      fear = 6,
-      happiness = 99,
-      neutral = 22,
-      sadness = 25,
-      surprise = 30;
-    // try{
-    //console.log("checkin." + year + "-" + month + "-" + date)
-    //{ Date: { $gt: new Date(year + "-" + month + "-" + date), $lt: new Date(year + "-" + month + "-" + date) } }
-    dbo.collection("checkattendance").find({ Date: year + "-" + month + "-" + date }).toArray(function (err, result) {
-      if (err) res.json("[]");
-
-      // //console.log(result);
-
-      for (let i = 0; i < result.length; i++) {
-        let emotion1 = result[i].checkin.emotion.emotion;
-        let emotion2 = result[i].checkout.emotion.emotion;
-
-        //console.log("emo:", emotion1);
-        let maxProp = null
-        let maxValue = -1
-        let secProp = null
-        let secValue = -1
-
-        for (var prop in emotion1) {
-          if (emotion1.hasOwnProperty(prop)) {
-
-            let value = emotion1[prop]
-            if (value > maxValue) {
-              secValue = maxValue;
-              secProp = maxProp
-              maxValue = value;
-              maxProp = prop
-            } else if (secValue < value) {
-              secValue = value;
-              secProp = prop
-            }
-          }
-        }
-
-        if (maxProp == 'neutral') {
-          if (maxValue == 1) {
-            neutral++;
-          }
-          else if (maxValue < 1) {
-            if (secProp == 'anger') anger++;
-            else if (secProp == 'contempt') contempt++;
-            else if (secProp == 'disgust') disgust++;
-            else if (secProp == 'fear') fear++;
-            else if (secProp == 'happiness') happiness++;
-            else if (secProp == 'sadness') sadness++;
-            else if (secProp == 'surprise') surprise++;
-          }
-        }
-        else if (maxProp == 'anger') anger++;
-        else if (maxProp == 'contempt') contempt++;
-        else if (maxProp == 'disgust') disgust++;
-        else if (maxProp == 'fear') fear++;
-        else if (maxProp == 'happiness') happiness++;
-        else if (maxProp == 'sadness') sadness++;
-        else if (maxProp == 'surprise') surprise++;
-
-
-        for (var prop in emotion2) {
-          if (emotion2.hasOwnProperty(prop)) {
-
-            let value = emotion2[prop]
-            if (value > maxValue) {
-              secValue = maxValue;
-              secProp = maxProp
-              maxValue = value;
-              maxProp = prop
-            } else if (secValue < value) {
-              secValue = value;
-              secProp = prop
-            }
-          }
-        }
-
-        if (result[i].checkout.emotion != "") {
-          if (maxProp == 'neutral') {
-            if (maxValue == 1) {
-              neutral++;
-            }
-            else if (maxValue < 1) {
-              if (secProp == 'anger') anger++;
-              else if (secProp == 'contempt') contempt++;
-              else if (secProp == 'disgust') disgust++;
-              else if (secProp == 'fear') fear++;
-              else if (secProp == 'happiness') happiness++;
-              else if (secProp == 'sadness') sadness++;
-              else if (secProp == 'surprise') surprise++;
-            }
-          }
-          else if (maxProp == 'anger') anger++;
-          else if (maxProp == 'contempt') contempt++;
-          else if (maxProp == 'disgust') disgust++;
-          else if (maxProp == 'fear') fear++;
-          else if (maxProp == 'happiness') happiness++;
-          else if (maxProp == 'sadness') sadness++;
-          else if (maxProp == 'surprise') surprise++;
-        }
-
-
-      }
-
-      res.json(
-        {
-          anger: anger,
-          contempt: contempt,
-          disgust: disgust,
-          fear: fear,
-          happiness: happiness,
-          sadness: sadness,
-          surprise: surprise,
-          neutral: neutral
-        }
-      );
-      db.close();
-    });
-    // }catch(err){
-    // //console.log(err.stack);
-    // res.json("[]");}
-  });
-
-});
-
-
-
-app.get('/getcheckattendance', cors(issue2options), function (req, res) {
-  let date_ob = new Date();
-  let date = ("0" + date_ob.getDate()).slice(-2);
-
-  // current month
-  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
-  // current year
-  let year = date_ob.getFullYear();
-  //console.log("getcheckin");
-  const uri = "mongodb://localhost:27017/";
-  //, { useNewUrlParser: true }
-  const client = new MongoClient.connect(uri, function (err, db) {
-    //console.log("connext");
-    if (err) res.json("[]");
-    var dbo = db.db("checkin");
-    // try{
-    // //console.log("checkin." + year + "-" + month + "-" + date)
-    dbo.collection("checkattendance").find().toArray(function (err, result) {
-      if (err) res.json("[]");
-
-
-      res.json(result);
-      db.close();
-    });
-    // }catch(err){
-    // //console.log(err.stack);
-    // res.json("[]");}
-  });
-
-});
 
 app.get('/getcheckattendance', cors(issue2options), function (req, res) {
   let date_ob = new Date();
