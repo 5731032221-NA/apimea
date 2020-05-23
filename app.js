@@ -1070,7 +1070,7 @@ app.get('/countmeaprofile', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("mea");
     // try{
-    dbo.collection("profile").find().toArray(function (err, result) {
+    dbo.collection("profile").find().project({ encimage: 0 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
       res.json(result.length);
