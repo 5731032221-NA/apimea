@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 var http = require('http');
-let date_now = new Date(2020, 4, 8);
+let date_now = new Date();
 let date = ("0" + date_now.getDate()).slice(-2);
 
 // current month
