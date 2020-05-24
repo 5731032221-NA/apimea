@@ -1895,6 +1895,29 @@ app.get('/getmonthlyovertime', function (req, res) {
 
 });
 
+app.get('/getcropinfobydate/:date', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("cropinfo");
+    // try{
+    var query = { date: date };
+    dbo.collection("data").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+
 app.get('/getdetect', function (req, res) {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
