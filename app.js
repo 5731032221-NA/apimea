@@ -2130,7 +2130,7 @@ app.get('/getcheckinbycamera/:cam', function (req, res) {
 
 });
 
-app.get('/getdetectbycamera/:cam', function (req, res) {
+app.get('/getdetectinbycamera/:cam', function (req, res) {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
 
@@ -2148,10 +2148,45 @@ app.get('/getdetectbycamera/:cam', function (req, res) {
     var dbo = db.db("checkin");
     // try{
     var query = { "camerain": parseInt(req.params.cam) };
-    dbo.collection("checkin." + year + "-" + month + "-" + date).find(query).toArray(function (err, result) {
+    dbo.collection("checkin." + year + "-" + month + "-" + date).find(query).sort({ checkindatetime: 1 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
-      result.sort((a, b) => parseFloat(a.checkindatetime) - parseFloat(b.checkindatetime));
+
+      // result.sort((a, b) => parseFloat(a.checkindatetime) - parseFloat(b.checkindatetime));
+      resdata = [result[result.length -3],result[result.length -2],result[result.length-1]];
+      res.json(resdata);
+      db.close();
+    });
+    // }catch(err){
+    // //console.log(err.stack);
+    // res.json("[]");}
+  });
+
+});
+
+app.get('/getdetectoutbycamera/:cam', function (req, res) {
+  let date_ob = new Date();
+  let date = ("0" + date_ob.getDate()).slice(-2);
+
+  // current month
+  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+  // current year
+  let year = date_ob.getFullYear();
+  //console.log("getcheckin");
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("checkin");
+    // try{
+    var query = { "cameraout": parseInt(req.params.cam) };
+    dbo.collection("checkin." + year + "-" + month + "-" + date).find(query).sort({ checkoutdatetime: 1 }).toArray(function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+
+      result.sort((a, b) => parseFloat(a.checkoutdatetime) - parseFloat(b.checkoutdatetime));
       resdata = [result[0],resdata[1],resdata[2]];
       res.json(resdata);
       db.close();
