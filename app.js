@@ -848,6 +848,66 @@ app.post('/postnotification', cors(issue2options), function (req, res) {
   });
 });
 
+app.get('/getalert', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // try{
+    dbo.collection("alert").find().toArray(function (err, result) {
+      if (err) res.json("[]");
+
+      res.json(result);
+      db.close();
+    });
+  });
+});
+
+app.post('/postalert', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var myobj = { id:req.body.email,walkinalert: req.body.walkinalert,walkoutalert: req.body.walkoutalert ,email: req.body.email };
+    dbo.collection("alert").insertOne(myobj, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
+app.delete('/deletealert/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var query = { _id: ObjectId(req.params.id) };
+    dbo.collection("alert").deleteMany(query, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
 app.delete('/deletenotification/:id', cors(issue2options), function (req, res) {
 
   const uri = "mongodb://localhost:27017/";
