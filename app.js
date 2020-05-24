@@ -1904,7 +1904,7 @@ app.get('/getcropinfobydate/:date', cors(issue2options), function (req, res) {
     if (err) res.json("[]");
     var dbo = db.db("cropinfo");
     // try{
-    var query = { date: date };
+    var query = { date: req.params.date };
     dbo.collection("data").find(query).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
