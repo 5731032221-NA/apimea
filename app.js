@@ -2186,8 +2186,7 @@ app.get('/getdetectoutbycamera/:cam', function (req, res) {
       if (err) res.json("[]");
       //console.log(result);
 
-      result.sort((a, b) => parseFloat(a.checkoutdatetime) - parseFloat(b.checkoutdatetime));
-      resdata = [result[0],resdata[1],resdata[2]];
+      resdata = [result[result.length -3],result[result.length -2],result[result.length-1]];
       res.json(resdata);
       db.close();
     });
