@@ -995,6 +995,117 @@ app.delete('/deleteaccount/:id', cors(issue2options), function (req, res) {
   });
 });
 
+
+app.get('/traincropimage/:name/:id/:_id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("image");
+    // try{
+    var query = { name: req.params.name };
+    var meaproq = { id: req.params.id };
+    var meadb = db.db("mea");
+    meadb.collection("profile").find(meaproq).project({ encimage: 0 }).toArray(function (err, profile) {
+      dbo.collection("crop").find(query).toArray(function (err, result) {
+        if (err) res.json("[]");
+        console.log(result);
+        var rawData = atob(result[0].data);
+
+
+        var iv = rawData.substring(0, 16);
+        var crypttext = rawData.substring(16);
+
+        //Parsers
+        crypttext = CryptoJS.enc.Latin1.parse(crypttext);
+        iv = CryptoJS.enc.Latin1.parse(iv);
+        key = CryptoJS.enc.Utf8.parse(master_key);
+
+        // Decrypt
+        var plaintextArray = CryptoJS.AES.decrypt(
+          { ciphertext: crypttext },
+          key,
+          { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+        );
+
+        // Can be Utf8 too
+        output_plaintext = CryptoJS.enc.Latin1.stringify(plaintextArray);
+        // res.json({ "data": output_plaintext });
+        //console.log(result);
+        // base64pic = 'data:image/jpg;base64,' + output_plaintext;
+        base64pic = output_plaintext;
+        // var  img = resizebase64(base64pic, 300, 300); 
+        var bufferValue = Buffer.from(base64pic,"base64");
+        // const byteCharacters = atob(base64pic);
+        // const byteArrays = [];
+
+        // for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        //   const slice = byteCharacters.slice(offset, offset + 512);
+
+        //   const byteNumbers = new Array(slice.length);
+        //   for (let i = 0; i < slice.length; i++) {
+        //     byteNumbers[i] = slice.charCodeAt(i);
+        //   }
+
+        //   const byteArray = new Uint8Array(byteNumbers);
+        //   byteArrays.push(byteArray);
+        // }
+
+        // const blob = new Blob(byteArrays, { type: contentType });
+
+
+        let options2 = {
+          uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/persons/' + profile[0].faceid + '/persistedFaces?detectionModel=detection_02',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Ocp-Apim-Subscription-Key': subscriptionKey
+          },
+
+          body: bufferValue
+          // body: '{"url": ' + '"' + imageUrl + '"}',
+        };
+        request.post(options2, (error2, response2, body2) => {
+          if (error2) {
+            console.log('Error: ', error2);
+            // res.send(error2)
+            res.json({ "error": "error2" })
+            return;
+          }
+          let options3 = {
+            uri: 'https://meafacedetection.cognitiveservices.azure.com/face/v1.0/persongroups/mea/train',
+            headers: {
+              'Ocp-Apim-Subscription-Key': subscriptionKey
+            }
+          };
+          request.post(options3, (error3, response3, body3) => {
+            if (error3) {
+              console.log('Error: ', error3);
+              res.send(error3)
+              return;
+            }
+            var dbcrop = db.db("cropinfo");
+            var query = { _id: ObjectId(req.params._id) };
+            var newvalues = { $set: { train: req.params.id } };
+            dbcrop.collection("data").updateOne(query, newvalues, function (err, resultp) {
+
+              res.json(response2);
+              db.close();
+            });
+          });
+          // {"persistedFaceId":"c2aac01b-ce86-4179-a47f-3c4b9d430d8
+          //{"persistedFaceId":"3f6e9828-1802-43d8-9801-114af362d11c"}
+        });
+
+      });
+      // }catch(err){
+      // //console.log(err.stack);
+      // res.json("[]");}
+    });
+  });
+});
+
 app.get('/getaccount', cors(issue2options), function (req, res) {
 
   const uri = "mongodb://localhost:27017/";
