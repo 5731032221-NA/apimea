@@ -2328,9 +2328,6 @@ app.get('/getdetectinbycamera/:cam', function (req, res) {
       res.json(resdata);
       db.close();
     });
-    // }catch(err){
-    // //console.log(err.stack);
-    // res.json("[]");}
   });
 
 });
