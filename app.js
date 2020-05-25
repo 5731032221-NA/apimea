@@ -2316,10 +2316,10 @@ app.get('/getdetectinbycamera/:cam', function (req, res) {
   const client = new MongoClient.connect(uri, function (err, db) {
     //console.log("connext");
     if (err) res.json("[]");
-    var dbo = db.db("checkin");
+    var dbo = db.db("detect");
     // try{
     var query = { "camerain": parseInt(req.params.cam) };
-    dbo.collection("checkin." + year + "-" + month + "-" + date).find(query).sort({ checkindatetime: 1 }).toArray(function (err, result) {
+    dbo.collection("detect." + year + "-" + month + "-" + date).find(query).sort({ checkindatetime: 1 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
 
@@ -2350,10 +2350,10 @@ app.get('/getdetectoutbycamera/:cam', function (req, res) {
   const client = new MongoClient.connect(uri, function (err, db) {
     //console.log("connext");
     if (err) res.json("[]");
-    var dbo = db.db("checkin");
+    var dbo = db.db("detect");
     // try{
     var query = { "cameraout": parseInt(req.params.cam) };
-    dbo.collection("checkin." + year + "-" + month + "-" + date).find(query).sort({ checkoutdatetime: 1 }).toArray(function (err, result) {
+    dbo.collection("detect." + year + "-" + month + "-" + date).find(query).sort({ checkoutdatetime: 1 }).toArray(function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
 
