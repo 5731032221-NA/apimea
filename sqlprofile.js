@@ -33,7 +33,7 @@ fs.createReadStream('profilepic.csv')
                 await request.input('@id', sql.Int, element.id).input('@title', sql.VarChar, element.title).input('@name', sql.VarChar, element.name).input('@surname', sql.VarChar, element.surname).input('@email', sql.VarChar, element.email).input('@position', sql.VarChar, element.position)
                 request.query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
 
-                    if (err) console.log(err)
+                    // if (err) console.log(err)
 
                     console.log(recordset)
                     // send records as a response
