@@ -3,7 +3,7 @@ const fs = require('fs');
 var url = "mongodb://localhost:27017/";
 var jso = []
 const request = require('request');
-var sql = require("mssql");
+
 
 var config = {
     user: 'SA',
@@ -28,9 +28,9 @@ fs.createReadStream('profilepic.csv')
             sql.connect(config, function (err) {
 
                 if (err) console.log(err);
-
+                let sql = require("mssql");
                 // create Request object
-                var request = new sql.Request();
+                let request = new sql.Request();
 
                 // query to the database and get the records
                 request.input('@id', sql.Int, element.id).input('@title', sql.VarChar, element.title).input('@name', sql.VarChar, element.name).input('@surname', sql.VarChar, element.surname).input('@email', sql.VarChar, element.email).input('@position', sql.VarChar, element.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
