@@ -22,7 +22,7 @@ fs.createReadStream('profilepic.csv')
         // console.log('CSV file successfully processed');
         // console.log(jso);
         jso.forEach(async (element) => {
-            let pool = await sql.connect(config)
+            // let pool = await sql.connect(config)
 
             
             // sql.connect(config, function (err,pool) {

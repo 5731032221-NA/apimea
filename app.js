@@ -63,16 +63,15 @@ app.get('/getsqlprofile', cors(issue2options), function (req, res) {
     // query to the database and get the records
     request.query('select * from profile', function (err, recordset) {
 
-      if (err) console.log(err)
+      if (err) res.send('[]');
 
-      // send records as a response
-      res.send(recordset);
+        res.send(recordset[0][0])
 
     });
   });
 })
 
-app.post('/postsqlprofile/:id', cors(issue2options), function (req, res) {
+app.get('/insertsqlprofile/:id/:title/:name/:surname/:email/:position', cors(issue2options), function (req, res) {
   var config = {
     user: 'SA',
     password: 'Passw0rd',
@@ -87,14 +86,77 @@ app.post('/postsqlprofile/:id', cors(issue2options), function (req, res) {
 
     // create Request object
     var request = new sql.Request();
+                
+    // create Request object
+    request.input('id', sql.Int, req.body.id).input('title', sql.NVarChar, req.body.title).input('name', sql.NVarChar, req.body.name).input('surname', sql.NVarChar, req.body.surname).input('email', sql.NVarChar, req.body.email).input('position', sql.NVarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
 
-    // query to the database and get the records
-    request.input( 'id', sql.VarChar, req.params.id).input('title', sql.VarChar, req.body.title).input('name', sql.VarChar, req.body.name).input('surname', sql.VarChar, req.body.surname).input('email', sql.VarChar, req.body.email).input('position', sql.VarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
+      if (err) res.send('[]');
 
-      if (err) console.log(err)
+      res.send(recordset)
+        // send records as a response
+        // res.send(recordset);
 
-      // send records as a response
-      res.send(recordset);
+    });
+  });
+
+});
+
+app.get('/updatesqlprofile/:id/:title/:name/:surname/:email/:position', cors(issue2options), function (req, res) {
+  var config = {
+    user: 'SA',
+    password: 'Passw0rd',
+    server: 'localhost',
+    database: 'MEA'
+  };
+
+  // connect to your database
+  sql.connect(config, function (err) {
+
+    if (err) console.log(err);
+
+    // create Request object
+    var request = new sql.Request();
+                
+    // create Request object
+    request.input('id', sql.Int, req.body.id).input('title', sql.NVarChar, req.body.title).input('name', sql.NVarChar, req.body.name).input('surname', sql.NVarChar, req.body.surname).input('email', sql.NVarChar, req.body.email).input('position', sql.NVarChar, req.body.position).query('UPDATE  profile SET title= @title,name= @name,surname= @surname,email= @email,position= @position WHERE id = @id ', function (err, recordset) {
+
+        if (err)  res.send('[]');
+
+        res.send(recordset)
+
+        // console.log(recordset)
+        // send records as a response
+        // res.send(recordset);
+
+    });
+  });
+
+});
+
+app.get('/deletesqlprofile/:id', cors(issue2options), function (req, res) {
+  var config = {
+    user: 'SA',
+    password: 'Passw0rd',
+    server: 'localhost',
+    database: 'MEA'
+  };
+
+  // connect to your database
+  sql.connect(config, function (err) {
+
+    if (err) console.log(err);
+
+    // create Request object
+    var request = new sql.Request();
+                
+    // create Request object
+    request.input('id', sql.Int, req.params.id).query('DELETE FROM  profile WHERE id = @id', function (err, recordset) {
+
+        if (err) res.send('[]');
+
+        res.send(recordset)
+        // send records as a response
+        // res.send(recordset);
 
     });
   });
