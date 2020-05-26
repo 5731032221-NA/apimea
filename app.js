@@ -121,9 +121,14 @@ app.get('/updatesqlprofile/:id/:title/:name/:surname/:email/:position', cors(iss
 
     // create Request object
     var request = new sql.Request();
+    let title = "นาย1"
+    let name = "เทส2"
+    let surname = "ระบบ3"
+    let email = "a@gmail.com4"
+    let position = "a5"
                 
     // create Request object
-    request.input('id', sql.Int, req.params.id).input('title', sql.NVarChar, req.params.title).input('name', sql.NVarChar, req.params.name).input('surname', sql.NVarChar, req.params.surname).input('email', sql.NVarChar, req.params.email).input('position', sql.NVarChar, req.params.position).query('UPDATE  profile SET title= @title,name= @name,surname= @surname,email= @email,position= @position WHERE id = @id ', function (err, recordset) {
+    request.input('id', sql.Int, req.params.id).input('title', sql.NVarChar, title).input('name', sql.NVarChar, name).input('surname', sql.NVarChar, surname).input('email', sql.NVarChar, email).input('position', sql.NVarChar, position).query('UPDATE  profile SET title= @title,name= @name,surname= @surname,email= @email,position= @position WHERE id = @id ', function (err, recordset) {
 
         if (err)  res.send('[]');
 
