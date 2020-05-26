@@ -29,7 +29,7 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-
+var sql = require("mssql");
 var timeout = require('connect-timeout');
 app.use(timeout('300s'));
 
@@ -46,7 +46,7 @@ app.get('/', function (req, res) {
 
 app.get('/getsqlprofile', cors(issue2options), function (req, res) {
   var config = {
-    user: 'sa',
+    user: 'SA',
     password: 'Passw0rd',
     server: 'localhost',
     database: 'MEA'
@@ -74,7 +74,7 @@ app.get('/getsqlprofile', cors(issue2options), function (req, res) {
 
 app.post('/postsqlprofile/:id', cors(issue2options), function (req, res) {
   var config = {
-    user: 'sa',
+    user: 'SA',
     password: 'Passw0rd',
     server: 'localhost',
     database: 'MEA'
@@ -89,7 +89,7 @@ app.post('/postsqlprofile/:id', cors(issue2options), function (req, res) {
     var request = new sql.Request();
 
     // query to the database and get the records
-    request.input('@id', sql.VarChar, req.params.id).input('@title', sql.VarChar, req.body.title).input('@name', sql.VarChar, req.body.name).input('@surname', sql.VarChar, req.body.surname).input('@email', sql.VarChar, req.body.email).input('@position', sql.VarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
+    request.input('id', sql.VarChar, req.params.id).input('title', sql.VarChar, req.body.title).input('name', sql.VarChar, req.body.name).input('surname', sql.VarChar, req.body.surname).input('email', sql.VarChar, req.body.email).input('position', sql.VarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
 
       if (err) console.log(err)
 
