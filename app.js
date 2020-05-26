@@ -71,7 +71,7 @@ app.get('/getsqlprofile', cors(issue2options), function (req, res) {
   });
 })
 
-app.get('/insertsqlprofile/:id/:title/:name/:surname/:email/:position', cors(issue2options), function (req, res) {
+app.get('/insertsqlprofile/:id', cors(issue2options), function (req, res) {
   var config = {
     user: 'SA',
     password: 'Passw0rd',
@@ -86,10 +86,14 @@ app.get('/insertsqlprofile/:id/:title/:name/:surname/:email/:position', cors(iss
 
     // create Request object
     var request = new sql.Request();
-                
+    let title = "นาย"
+    let name = "เทส"
+    let surname = "ระบบ"
+    let email = "a@gmail.com"
+    let position = "a"
     // create Request object
     // request.input('id', sql.Int, req.body.id).input('title', sql.NVarChar, req.body.title).input('name', sql.NVarChar, req.body.name).input('surname', sql.NVarChar, req.body.surname).input('email', sql.NVarChar, req.body.email).input('position', sql.NVarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
-    request.input('id', sql.Int, req.params.id).input('title', sql.NVarChar, req.params.title).input('name', sql.NVarChar, req.params.name).input('surname', sql.NVarChar, req.params.surname).input('email', sql.NVarChar, req.params.email).input('position', sql.NVarChar, req.params.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
+    request.input('id', sql.Int, req.params.id).input('title', sql.NVarChar, title).input('name', sql.NVarChar, name).input('surname', sql.NVarChar, surname).input('email', sql.NVarChar, email).input('position', sql.NVarChar, position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
 
       if (err) res.send('[]');
 
