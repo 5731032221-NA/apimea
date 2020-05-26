@@ -29,7 +29,7 @@ fs.createReadStream('profilepic.csv')
 
                 // if (err) console.log(err);
                 // let request = await pool.request()
-                var request = new sql.Request();
+                var request = await new sql.Request();
                 
                 // create Request object
                 request.input('id', sql.Int, element.id).input('title', sql.NVarChar, element.title).input('name', sql.NVarChar, element.name).input('surname', sql.NVarChar, element.surname).input('email', sql.NVarChar, element.email).input('position', sql.NVarChar, element.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
