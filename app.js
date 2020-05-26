@@ -88,7 +88,8 @@ app.get('/insertsqlprofile/:id/:title/:name/:surname/:email/:position', cors(iss
     var request = new sql.Request();
                 
     // create Request object
-    request.input('id', sql.Int, req.body.id).input('title', sql.NVarChar, req.body.title).input('name', sql.NVarChar, req.body.name).input('surname', sql.NVarChar, req.body.surname).input('email', sql.NVarChar, req.body.email).input('position', sql.NVarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
+    // request.input('id', sql.Int, req.body.id).input('title', sql.NVarChar, req.body.title).input('name', sql.NVarChar, req.body.name).input('surname', sql.NVarChar, req.body.surname).input('email', sql.NVarChar, req.body.email).input('position', sql.NVarChar, req.body.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
+    request.input('id', sql.Int, req.params.id).input('title', sql.NVarChar, req.params.title).input('name', sql.NVarChar, req.params.name).input('surname', sql.NVarChar, req.params.surname).input('email', sql.NVarChar, req.params.email).input('position', sql.NVarChar, req.params.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
 
       if (err) res.send('[]');
 
