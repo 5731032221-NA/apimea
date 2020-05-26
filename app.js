@@ -106,7 +106,7 @@ app.get('/insertsqlprofile/:id', cors(issue2options), function (req, res) {
 
 });
 
-app.get('/updatesqlprofile/:id/:title/:name/:surname/:email/:position', cors(issue2options), function (req, res) {
+app.get('/updatesqlprofile/:id', cors(issue2options), function (req, res) {
   var config = {
     user: 'SA',
     password: 'Passw0rd',
