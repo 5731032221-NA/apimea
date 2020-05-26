@@ -65,7 +65,7 @@ app.get('/getsqlprofile', cors(issue2options), function (req, res) {
 
       if (err) res.send('[]');
 
-        res.send(recordset[0])
+        res.send(recordset)
 
     });
   });
