@@ -6,7 +6,7 @@ const request = require('request');
 var sql = require("mssql");
 
 var config = {
-    user: 'sa',
+    user: 'SA',
     password: 'Passw0rd',
     server: 'localhost',
     database: 'MEA'
