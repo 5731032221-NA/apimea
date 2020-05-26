@@ -24,11 +24,11 @@ fs.createReadStream('profilepic.csv')
         jso.forEach(element => {
 
 
-
+            let sql = require("mssql");
             sql.connect(config, function (err) {
 
                 if (err) console.log(err);
-                let sql = require("mssql");
+                
                 // create Request object
                 let request = new sql.Request();
 
