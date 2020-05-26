@@ -3,7 +3,7 @@ const fs = require('fs');
 var url = "mongodb://localhost:27017/";
 var jso = []
 const request = require('request');
-
+var sql = require("mssql");
 
 var config = {
     user: 'SA',
@@ -21,23 +21,25 @@ fs.createReadStream('profilepic.csv')
     .on('end', () => {
         // console.log('CSV file successfully processed');
         // console.log(jso);
-        jso.forEach(element => {
+        jso.forEach(async (element) => {
+            let pool = await sql.connect(config)
 
+            
+            // sql.connect(config, function (err,pool) {
 
-            let sql = require("mssql");
-            sql.connect(config, function (err,pool) {
-
-                if (err) console.log(err);
-                
+                // if (err) console.log(err);
+                let request = await pool.request()
                 // create Request object
-                pool.request().input('@id', sql.Int, element.id).input('@title', sql.VarChar, element.title).input('@name', sql.VarChar, element.name).input('@surname', sql.VarChar, element.surname).input('@email', sql.VarChar, element.email).input('@position', sql.VarChar, element.position).query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
+                await request.input('@id', sql.Int, element.id).input('@title', sql.VarChar, element.title).input('@name', sql.VarChar, element.name).input('@surname', sql.VarChar, element.surname).input('@email', sql.VarChar, element.email).input('@position', sql.VarChar, element.position)
+                request.query('insert into profile (id,title,name,surname,email,position) values (@id,@title,@name,@surname,@email,@position)', function (err, recordset) {
 
                     if (err) console.log(err)
 
+                    console.log(recordset)
                     // send records as a response
                     // res.send(recordset);
 
                 });
-            });
+            // });
         })
     });
