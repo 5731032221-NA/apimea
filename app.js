@@ -20,6 +20,14 @@ const issue2options = {
   credentials: true,
   maxAge: 3600
 };
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'sfra.office@gmail.com',
+    pass: 'P@ssw0rd1234'
+  }
+});
 
 
 var timeout = require('connect-timeout');
@@ -886,6 +894,133 @@ app.post('/postalert', cors(issue2options), function (req, res) {
 
   });
 });
+
+app.get('/walkinalertbyid/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+
+  let date_ob = new Date();
+  let day = ("0" + date_ob.getDate()).slice(-2);
+
+  // current month
+  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+  // current year
+  let year = date_ob.getFullYear();
+  let hours = (parseInt(date_ob.getHours()) + 7).toString();
+
+  // current minutes
+  let minutes = date_ob.getMinutes();
+
+  let date = day + month + year;
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // try{
+    var query = { id: req.params.id, walkinalert: true };
+    dbo.collection("alert").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+
+      if (result.length > 0) {
+        let dbmea = db.db("mea");
+        result.forEach(maillist => {
+          let queryprof = { "id": maillist.id }
+          dbmea.collection("profile").find(queryprof).toArray(function (err, result2) {
+            var mailOptions = {
+              from: 'sfra.office@gmail.com',
+              to: maillist.email,
+              subject: 'SFRA Monitoring ' + date+ " ["+maillist.id+"]",
+              text: "เรียนผู้ดูแลระบบ,\n\nคุณ "+result2[0].name+" "+result2[0].surname+" ได้เข้างาน\nเมื่อเวลา "+hours+":"+minutes+"น.\n\nจึงเรียนมาเพื่อทราบ\nด้วยความนับถือ,\nSFRA TEAM\nsfra.office@gmail.com" ,
+
+            }
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.log(error);
+
+              
+                res.json("[]");
+                db.close();
+              } else {
+                // console.log('Email sent: ' + info.response);
+                res.json(result);
+                db.close();
+                // fs.unlink('dailyreport_' + date + '.pdf', callbackFunction)
+
+              }
+            });
+          })
+        })
+      } else {
+        res.json(result);
+        db.close();
+      }
+    });
+  });
+});
+
+app.get('/walkoutalertbyid/:id', cors(issue2options), function (req, res) {
+  const uri = "mongodb://localhost:27017/";
+  let date_ob = new Date();
+  let day = ("0" + date_ob.getDate()).slice(-2);
+
+  // current month
+  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+  // current year
+  let year = date_ob.getFullYear();
+  let hours = ("0" +(parseInt(date_ob.getHours()) + 7).toString()).slice(-2);
+
+  // current minutes
+  let minutes = ("0" +date_ob.getMinutes()).slice(-2);
+
+  let date = day + month + year;
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("setting");
+    // try{
+    var query = { id: req.params.id, walkoutalert: true };
+    dbo.collection("alert").find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+
+      if (result.length > 0) {
+        let dbmea = db.db("mea");
+        result.forEach(maillist => {
+          let queryprof = { "id": maillist.id }
+          dbmea.collection("profile").find(queryprof).toArray(function (err, result2) {
+            var mailOptions = {
+              from: 'sfra.office@gmail.com',
+              to: maillist.email,
+              subject: 'SFRA Monitoring ' + date+ " ["+maillist.id+"]",
+              text: "เรียนผู้ดูแลระบบ,\n\nคุณ "+result2[0].name+" "+result2[0].surname+" ได้ออกงาน\nเมื่อเวลา "+hours+":"+minutes+"น.\n\nจึงเรียนมาเพื่อทราบ\nด้วยความนับถือ,\nSFRA TEAM\nsfra.office@gmail.com" ,
+
+            }
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+               
+
+                res.json("[]");
+                db.close();
+              } else {
+                // console.log('Email sent: ' + info.response);
+                res.json(result);
+                db.close();
+                // fs.unlink('dailyreport_' + date + '.pdf', callbackFunction)
+
+              }
+            });
+          })
+        })
+      } else {
+        res.json(result);
+        db.close();
+      }
+    });
+  });
+});
+
 
 app.delete('/deletealert/:id', cors(issue2options), function (req, res) {
 
