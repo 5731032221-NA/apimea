@@ -908,10 +908,10 @@ app.get('/walkinalertbyid/:id', cors(issue2options), function (req, res) {
 
   // current year
   let year = date_ob.getFullYear();
-  let hours = (parseInt(date_ob.getHours()) + 7).toString();
+  let hours = ("0" +(parseInt(date_ob.getHours()) + 7).toString()).slice(-2);
 
   // current minutes
-  let minutes = date_ob.getMinutes();
+  let minutes = ("0" +date_ob.getMinutes()).slice(-2);
 
   let date = day + month + year;
   const client = new MongoClient.connect(uri, function (err, db) {
