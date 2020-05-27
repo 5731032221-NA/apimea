@@ -4299,7 +4299,7 @@ var upload = multer({
       request('http://localhost:3000/uploadid', { json: true }, (err, res, body) => {
         if (err) { return console.log(err); }
         // console.log(body);
-        blobPath = body[0].id + '.jpg';
+        blobPath = body[0].id + '.'+body[0].ext;
         callback(null, blobPath);
       });
       // https.get('http://20.188.110.129:3000/uploadid').then(response => response.json())
@@ -4313,7 +4313,7 @@ var upload = multer({
   })
 })
 
-app.post('/uploadid/:id', function (req, res) {
+app.post('/uploadid/:id/:ext', function (req, res) {
   const uri = "mongodb://localhost:27017/";
   //, { useNewUrlParser: true }
   const client = new MongoClient.connect(uri, function (err, db) {
@@ -4324,7 +4324,7 @@ app.post('/uploadid/:id', function (req, res) {
     // var myobj = { id: req.params.id,"lastid": true };
     dbo.collection("lastid").updateOne(
       { "lastid": true },
-      { $set: { "id": req.params.id } },
+      { $set: { "id": req.params.id ,"ext": req.params.ext } },
       //
       { upsert: true }
       , function (err, result) {
