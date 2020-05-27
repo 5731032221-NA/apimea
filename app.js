@@ -65,7 +65,7 @@ app.get('/getsqlprofile', cors(issue2options), function (req, res) {
 
       if (err) res.send('[]');
 
-        res.send(recordset.recordsets)
+      res.send(recordset.recordsets)
 
     });
   });
@@ -98,8 +98,8 @@ app.get('/insertsqlprofile/:id', cors(issue2options), function (req, res) {
       if (err) res.send('[]');
 
       res.send(recordset)
-        // send records as a response
-        // res.send(recordset);
+      // send records as a response
+      // res.send(recordset);
 
     });
   });
@@ -126,17 +126,17 @@ app.get('/updatesqlprofile/:id', cors(issue2options), function (req, res) {
     let surname = "ระบบ3"
     let email = "a@gmail.com4"
     let position = "a5"
-                
+
     // create Request object
     request.input('id', sql.Int, req.params.id).input('title', sql.NVarChar, title).input('name', sql.NVarChar, name).input('surname', sql.NVarChar, surname).input('email', sql.NVarChar, email).input('position', sql.NVarChar, position).query('UPDATE  profile SET title= @title,name= @name,surname= @surname,email= @email,position= @position WHERE id = @id ', function (err, recordset) {
 
-        if (err)  res.send('[]');
+      if (err) res.send('[]');
 
-        res.send(recordset)
+      res.send(recordset)
 
-        // console.log(recordset)
-        // send records as a response
-        // res.send(recordset);
+      // console.log(recordset)
+      // send records as a response
+      // res.send(recordset);
 
     });
   });
@@ -158,15 +158,15 @@ app.get('/deletesqlprofile/:id', cors(issue2options), function (req, res) {
 
     // create Request object
     var request = new sql.Request();
-                
+
     // create Request object
     request.input('id', sql.Int, req.params.id).query('DELETE FROM  profile WHERE id = @id', function (err, recordset) {
 
-        if (err) res.send('[]');
+      if (err) res.send('[]');
 
-        res.send(recordset)
-        // send records as a response
-        // res.send(recordset);
+      res.send(recordset)
+      // send records as a response
+      // res.send(recordset);
 
     });
   });
@@ -2351,6 +2351,27 @@ app.get('/getcropinfobydate/:date', cors(issue2options), function (req, res) {
     // res.json("[]");}
   });
 });
+app.delete('/deleteropinfo/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("cropinfo");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var query = { _id: ObjectId(req.params.id) };
+    dbo.collection("data").deleteMany(query, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
 
 
 app.get('/getdetect', function (req, res) {
@@ -3307,19 +3328,23 @@ app.get('/getmeabygender/:gender', cors(issue2options), function (req, res) {
 
           let mea = [];
           // var count = 1;
-
+          let arr = [];
 
           for (let i = 0; i < conc.length; i++) {
             for (let j = 0; j < result3.length; j++) {
               if (result3[j].id == conc[i].id) {
-                result3[j]['checkin'] = conc[i]['checkin'];
-                result3[j]['checkout'] = conc[i]['checkout'];
-                mea.push(result3[j]);
+                console.log(arr)
+                if (arr.indexOf(result3[j].id) > -1) { }
+                else {
+                  arr.push(result3[j].id);
+                  result3[j]['checkin'] = conc[i]['checkin'];
+                  result3[j]['checkout'] = conc[i]['checkout'];
+                  mea.push(result3[j]);
 
+                }
               }
             }
           }
-
 
           res.json(mea);
           db.close();
@@ -3368,15 +3393,20 @@ app.get('/getmeabygender/:gender/:happy', cors(issue2options), function (req, re
 
           let mea = [];
           // var count = 1;
-
+          let arr = [];
 
           for (let i = 0; i < conc.length; i++) {
             for (let j = 0; j < result3.length; j++) {
               if (result3[j].id == conc[i].id) {
-                result3[j]['checkin'] = conc[i]['checkin'];
-                result3[j]['checkout'] = conc[i]['checkout'];
-                mea.push(result3[j]);
+                console.log(arr)
+                if (arr.indexOf(result3[j].id) > -1) { }
+                else {
+                  arr.push(result3[j].id);
+                  result3[j]['checkin'] = conc[i]['checkin'];
+                  result3[j]['checkout'] = conc[i]['checkout'];
+                  mea.push(result3[j]);
 
+                }
               }
             }
           }
@@ -4299,7 +4329,7 @@ var upload = multer({
       request('http://localhost:3000/uploadid', { json: true }, (err, res, body) => {
         if (err) { return console.log(err); }
         // console.log(body);
-        blobPath = body[0].id + '.'+body[0].ext;
+        blobPath = body[0].id + '.' + body[0].ext;
         callback(null, blobPath);
       });
       // https.get('http://20.188.110.129:3000/uploadid').then(response => response.json())
@@ -4324,7 +4354,7 @@ app.post('/uploadid/:id/:ext', function (req, res) {
     // var myobj = { id: req.params.id,"lastid": true };
     dbo.collection("lastid").updateOne(
       { "lastid": true },
-      { $set: { "id": req.params.id ,"ext": req.params.ext } },
+      { $set: { "id": req.params.id, "ext": req.params.ext } },
       //
       { upsert: true }
       , function (err, result) {
