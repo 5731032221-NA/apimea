@@ -1048,7 +1048,7 @@ app.post('/postalert', cors(issue2options), function (req, res) {
     var dbo = db.db("setting");
     // console.log("req", req.body);
     // res.send(req.body);
-    var myobj = { id: req.body.email, walkinalert: req.body.walkinalert, walkoutalert: req.body.walkoutalert, email: req.body.email };
+    var myobj = { id: req.body.id, walkinalert: req.body.walkinalert, walkoutalert: req.body.walkoutalert, email: req.body.email };
     dbo.collection("alert").insertOne(myobj, function (err, result) {
       if (err) res.json("[]");
       //console.log(result);
