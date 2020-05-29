@@ -2627,6 +2627,27 @@ app.get('/getcheckinbycamera/:cam', function (req, res) {
 
 });
 
+app.get('/deletecheckinbydate/:date/:id', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("checkin");
+    // console.log("req", req.body);
+    // res.send(req.body);
+    var query = { id: req.params.id };
+    dbo.collection("checkin." + req.params.date).deleteMany(query, function (err, result) {
+      if (err) res.json("[]");
+      //console.log(result);
+      res.json(result);
+      db.close();
+    });
+
+  });
+});
+
 app.get('/getdetectinbycamera/:cam', function (req, res) {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
