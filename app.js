@@ -1065,6 +1065,7 @@ app.get('/walkinalertbyid/:id', cors(issue2options), function (req, res) {
   //, { useNewUrlParser: true }
 
   let date_ob = new Date();
+  date_ob.setTime(date_ob.getTime()+ (25200000))
   let day = ("0" + date_ob.getDate()).slice(-2);
 
   // current month
@@ -1072,7 +1073,7 @@ app.get('/walkinalertbyid/:id', cors(issue2options), function (req, res) {
 
   // current year
   let year = date_ob.getFullYear();
-  let hours = ("0" + (parseInt(date_ob.getHours()) + 7).toString()).slice(-2);
+  let hours = ("0" + (parseInt(date_ob.getHours()) ).toString()).slice(-2);
 
   // current minutes
   let minutes = ("0" + date_ob.getMinutes()).slice(-2);
@@ -1127,6 +1128,7 @@ app.get('/walkinalertbyid/:id', cors(issue2options), function (req, res) {
 app.get('/walkoutalertbyid/:id', cors(issue2options), function (req, res) {
   const uri = "mongodb://localhost:27017/";
   let date_ob = new Date();
+  date_ob.setTime(date_ob.getTime()+ (25200000))
   let day = ("0" + date_ob.getDate()).slice(-2);
 
   // current month
@@ -1134,7 +1136,7 @@ app.get('/walkoutalertbyid/:id', cors(issue2options), function (req, res) {
 
   // current year
   let year = date_ob.getFullYear();
-  let hours = ("0" + (parseInt(date_ob.getHours()) + 7).toString()).slice(-2);
+  let hours = ("0" + (parseInt(date_ob.getHours()) ).toString()).slice(-2);
 
   // current minutes
   let minutes = ("0" + date_ob.getMinutes()).slice(-2);
@@ -1887,14 +1889,16 @@ app.get('/insertmock', function (req, res) {
   const client = new MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("checkin");
+
     //var dbo = db.db("mea");
     let date_ob = new Date();
+    date_ob.setTime(date_ob.getTime()+ (25200000))
     let date = ("0" + date_ob.getDate()).slice(-2);
 
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
 
     let year = date_ob.getFullYear();
-    let hours = (parseInt(date_ob.getHours()) + 7).toString();
+    let hours = (parseInt(date_ob.getHours()) ).toString();
 
     // current minutes
     let minutes = date_ob.getMinutes();
@@ -1952,12 +1956,13 @@ app.get('/mock', function (req, res) {
     var dbo = db.db("checkin");
     //var dbo = db.db("mea");
     let date_ob = new Date();
+    date_ob.setTime(date_ob.getTime()+ (25200000))
     let date = ("0" + date_ob.getDate()).slice(-2);
 
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
 
     let year = date_ob.getFullYear();
-    let hours = ("0" + (parseInt(date_ob.getHours()) + 7).toString()).slice(-2);
+    let hours = ("0" + (parseInt(date_ob.getHours()) ).toString()).slice(-2);
 
     // current minutes
     let minutes = ("0" + (date_ob.getMinutes())).slice(-2);
@@ -2190,6 +2195,7 @@ app.get('/getdailyhappy', function (req, res) {
 
 app.get('/getdailyworktime', function (req, res) {
   let date_ob = new Date();
+  date_ob.setTime(date_ob.getTime()+ (25200000))
   let date = ("0" + date_ob.getDate()).slice(-2);
 
   // current month
@@ -2209,7 +2215,7 @@ app.get('/getdailyworktime', function (req, res) {
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
 
-      let checkouthh = date_ob.getHours() + 7;
+      let checkouthh = date_ob.getHours() ;
       let checkoutmm = date_ob.getMinutes();
 
       var arr = {}
