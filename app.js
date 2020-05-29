@@ -2219,8 +2219,8 @@ app.get('/getdailyworktime', function (req, res) {
 
       var arr = {}
       result.forEach(element => {
-        let checkouthh = date_ob.getHours() ;
-        let checkoutmm = date_ob.getMinutes();
+        let checkouthh = 15//date_ob.getHours() ;
+        let checkoutmm = 30//date_ob.getMinutes();
 
         if (element.checkoutdatetime != '') {
           checkouthh = parseInt(element.checkoutdatetime.substring(8, 10));
