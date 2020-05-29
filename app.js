@@ -2215,12 +2215,12 @@ app.get('/getdailyworktime', function (req, res) {
     dbo.collection("checkin." + year + "-" + month + "-" + date).find().toArray(function (err, result) {
       if (err) res.json("[]");
 
-      let checkouthh = date_ob.getHours() ;
-      let checkoutmm = date_ob.getMinutes();
+      
 
       var arr = {}
       result.forEach(element => {
-
+        let checkouthh = date_ob.getHours() ;
+        let checkoutmm = date_ob.getMinutes();
 
         if (element.checkoutdatetime != '') {
           checkouthh = parseInt(element.checkoutdatetime.substring(8, 10));
