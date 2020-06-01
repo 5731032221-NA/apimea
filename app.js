@@ -3434,6 +3434,10 @@ app.get('/getmeabygender/:gender/:happy', cors(issue2options), function (req, re
   else if (req.params.happy == "unhappy") qr = { $in: ["anger", "contempt", "disgust", "fear", "sadness"] };
 
 
+  let list = ["neutral"]
+  if (req.params.happy == "happy") list = ["happiness", "surprise"];
+  else if (req.params.happy == "unhappy") list = ["anger", "contempt", "disgust", "fear", "sadness"];
+
   const uri = "mongodb://localhost:27017/";
   //, { useNewUrlParser: true }
   const client = new MongoClient.connect(uri, function (err, db) {
