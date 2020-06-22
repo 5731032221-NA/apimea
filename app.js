@@ -1227,7 +1227,7 @@ app.get('/frameerror/:camera/', cors(issue2options), function (req, res) {
         var mailOptions = {
           from: 'sfra.office@gmail.com',
           to: 'mea.sfra@gmail.com,pemjiaph@metrosystems.co.th',
-          subject: 'SFRA Monitoring ',
+          subject: 'SFRA Alert',
           text: message,
         }
         transporter.sendMail(mailOptions, function (error, info) {
