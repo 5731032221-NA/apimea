@@ -1188,6 +1188,76 @@ app.get('/walkoutalertbyid/:id', cors(issue2options), function (req, res) {
   });
 });
 
+app.get('/frameerror/:camera/', cors(issue2options), function (req, res) {
+  const uri = "mongodb://localhost:27017/";
+  let date_ob = new Date();
+  date_ob.setTime(date_ob.getTime() + (25200000))
+  let day = ("0" + date_ob.getDate()).slice(-2);
+
+  // current month
+  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+  // current year
+  let year = date_ob.getFullYear();
+  let hours = ("0" + (parseInt(date_ob.getHours())).toString()).slice(-2);
+
+  // current minutes
+  let minutes = ("0" + date_ob.getMinutes()).slice(-2);
+
+  let date = day + month + year;
+  const client = new MongoClient.connect(uri, function (err, db) {
+    //console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("error");
+    // try{
+    var query = { camera: req.params.camera };
+
+    let message = "";
+    if (req.params.camera == 1) message = "เรียนผู้ดูแลระบบ,\n\nเมื่อเวลา " + hours + ":" + minutes + "น.\nเกิดความผิดปกติที่กล้อง CCTV กล้อง A ขาเข้า\n\nจึงเรียนมาเพื่อทราบ\nด้วยความนับถือ,\nSFRA TEAM\nsfra.office@gmail.com"
+    else if (req.params.camera == 2) message = "เรียนผู้ดูแลระบบ,\n\nเมื่อเวลา " + hours + ":" + minutes + "น.\nเกิดความผิดปกติที่กล้อง CCTV กล้อง A ขาออก\n\nจึงเรียนมาเพื่อทราบ\nด้วยความนับถือ,\nSFRA TEAM\nsfra.office@gmail.com"
+    else if (req.params.camera == 3) message = "เรียนผู้ดูแลระบบ,\n\nเมื่อเวลา " + hours + ":" + minutes + "น.\nเกิดความผิดปกติที่กล้อง CCTV กล้อง B ขาเข้า\n\nจึงเรียนมาเพื่อทราบ\nด้วยความนับถือ,\nSFRA TEAM\nsfra.office@gmail.com"
+    else if (req.params.camera == 4) message = "เรียนผู้ดูแลระบบ,\n\nเมื่อเวลา " + hours + ":" + minutes + "น.\nเกิดความผิดปกติที่กล้อง CCTV กล้อง B ขาออก\n\nจึงเรียนมาเพื่อทราบ\nด้วยความนับถือ,\nSFRA TEAM\nsfra.office@gmail.com"
+    dbo.collection("grayframe." + year + "-" + month + "-" + date).find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      console.log(result.length)
+      if (result.length == 0) {
+
+
+
+        var mailOptions = {
+          from: 'sfra.office@gmail.com',
+          to: 'mea.sfra@gmail.com,pemjiaph@metrosystems.co.th',
+          subject: 'SFRA Monitoring ',
+          text: message,
+        }
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error)
+            res.json("[]");
+            db.close();
+          } else {
+            // console.log('Email sent: ' + info.response);
+            var myobj = { camera: req.params.camera, datetime: date_ob };
+            dbo.collection("grayframe." + year + "-" + month + "-" + date).insertOne(myobj, function (err, result) {
+              if (err) console.log(err)
+              //console.log(result);
+              res.json(result);
+              db.close();
+            });
+
+            // fs.unlink('dailyreport_' + date + '.pdf', callbackFunction)
+
+          }
+        });
+
+
+      } else {
+        res.json(result);
+        db.close();
+      }
+    });
+  });
+});
 
 app.delete('/deletealert/:id', cors(issue2options), function (req, res) {
 
