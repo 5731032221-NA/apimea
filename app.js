@@ -238,7 +238,7 @@ app.post('/posttrainimage', cors(issue2options), function (req, res) {
     };
     request.post(options2, (error2, response2, body2) => {
       if (error2) {
-        console.log('Error: ', error2);
+        //console.log('Error: ', error2);
         // res.send(error2)
         res.json({ "error": "error2" })
         return;
@@ -251,7 +251,7 @@ app.post('/posttrainimage', cors(issue2options), function (req, res) {
       };
       request.post(options3, (error3, response3, body3) => {
         if (error3) {
-          console.log('Error: ', error3);
+          //console.log('Error: ', error3);
           res.send(error3)
           return;
         }
@@ -295,7 +295,7 @@ app.post('/removefaceapi', cors(issue2options), function (req, res) {
     };
     request.post(options3, (error3, response3, body3) => {
       if (error3) {
-        console.log('Error: ', error3);
+        //console.log('Error: ', error3);
         // res.send(error3)
         res.json({ "error": "error3" })
         return;
@@ -397,7 +397,7 @@ app.post('/updatetrainimage', cors(issue2options), function (req, res) {
     };
     request.post(options3, (error3, response3, body3) => {
       if (error3) {
-        console.log('Error: ', error3);
+        //console.log('Error: ', error3);
         // res.send(error3)
         res.json({ "error": "error3" })
         return;
@@ -629,12 +629,12 @@ app.get('/gethistoricaltop', cors(issue2options), function (req, res) {
       let value = {}
       result.forEach(function (item) {
         if (value[item.thebest] == null) {
-          console.log(item.thebest)
+          //console.log(item.thebest)
           value[item.thebest] = { "thebest": 1, "happiness": 0, "mealover": 0, "total": 1 }
           // console.log(strb);
           // let objb = JSON.parse(strb);
           // value.push(objb)
-          console.log(value);
+          //console.log(value);
           if (value[item.happiness] == null) {
             // value[item.mealover] = { "thebest": 0, "happiness": 0,"mealover": 1 }
             // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
@@ -670,7 +670,7 @@ app.get('/gethistoricaltop', cors(issue2options), function (req, res) {
         } else {
           value['' + item.thebest]['thebest']++;
           value['' + item.thebest]['total']++;
-          console.log(value['' + item.thebest]);
+          //console.log(value['' + item.thebest]);
           if (value['' + item.happiness] == null) {
             value[item.happiness] = { "thebest": 0, "happiness": 1, "mealover": 0, "total": 1 }
             // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
@@ -737,12 +737,12 @@ app.get('/gethistoricaltop/:from/:to', cors(issue2options), function (req, res) 
       result.forEach(function (item) {
 
         if (value[item.thebest] == null) {
-          console.log(item.thebest)
+          //console.log(item.thebest)
           value[item.thebest] = { "thebest": 1, "happiness": 0, "mealover": 0, "total": 1 }
           // console.log(strb);
           // let objb = JSON.parse(strb);
           // value.push(objb)
-          console.log(value);
+          //console.log(value);
           if (value[item.happiness] == null) {
             // value[item.mealover] = { "thebest": 0, "happiness": 0,"mealover": 1 }
             // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
@@ -778,7 +778,7 @@ app.get('/gethistoricaltop/:from/:to', cors(issue2options), function (req, res) 
         } else {
           value['' + item.thebest]['thebest']++;
           value['' + item.thebest]['total']++;
-          console.log(value['' + item.thebest]);
+          //console.log(value['' + item.thebest]);
           if (value['' + item.happiness] == null) {
             value[item.happiness] = { "thebest": 0, "happiness": 1, "mealover": 0, "total": 1 }
             // let strh = '{"' + item.happiness + '": { "thebest": 0, "happiness": 1,"mealover":0  }}'
@@ -1103,7 +1103,7 @@ app.get('/walkinalertbyid/:id', cors(issue2options), function (req, res) {
             }
             transporter.sendMail(mailOptions, function (error, info) {
               if (error) {
-                console.log(error);
+                //console.log(error);
 
 
                 res.json("[]");
@@ -1226,13 +1226,13 @@ app.get('/frameerror/:camera/', cors(issue2options), function (req, res) {
 
         var mailOptions = {
           from: 'sfra.office@gmail.com',
-          to: 'mea.sfra@gmail.com,pemjiaph@metrosystems.co.th',
+          to: 'mea.sfra@gmail.com,pemjiaph@metrosystems.co.th,attapol.bo@mea.or.th',
           subject: 'SFRA Alert',
           text: message,
         }
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
-            console.log(error)
+            //console.log(error)
             res.json("[]");
             db.close();
           } else {
@@ -1383,7 +1383,7 @@ app.get('/traincropimage/:name/:id/:_id', cors(issue2options), function (req, re
     meadb.collection("profile").find(meaproq).project({ encimage: 0 }).toArray(function (err, profile) {
       dbo.collection("crop").find(query).toArray(function (err, result) {
         if (err) res.json("[]");
-        console.log(result);
+        // console.log(result);
         var rawData = atob(result[0].data);
 
 
@@ -1440,7 +1440,7 @@ app.get('/traincropimage/:name/:id/:_id', cors(issue2options), function (req, re
         };
         request.post(options2, (error2, response2, body2) => {
           if (error2) {
-            console.log('Error: ', error2);
+            //console.log('Error: ', error2);
             // res.send(error2)
             res.json({ "error": "error2" })
             return;
@@ -1453,13 +1453,13 @@ app.get('/traincropimage/:name/:id/:_id', cors(issue2options), function (req, re
           };
           request.post(options3, (error3, response3, body3) => {
             if (error3) {
-              console.log('Error: ', error3);
+              //console.log('Error: ', error3);
               res.send(error3)
               return;
             }
             var dbcrop = db.db("cropinfo");
             var query = { _id: ObjectId(req.params._id) };
-            var newvalues = { $set: { train: req.params.id } };
+            var newvalues = { $set: { train: req.params.id, trainid: JSON.parse(response2.body).persistedFaceId } };
             dbcrop.collection("data").updateOne(query, newvalues, function (err, resultp) {
 
               res.json(response2);
@@ -3466,7 +3466,7 @@ app.get('/getmeabygender/:gender', cors(issue2options), function (req, res) {
           for (let i = 0; i < conc.length; i++) {
             for (let j = 0; j < result3.length; j++) {
               if (result3[j].id == conc[i].id) {
-                console.log(arr)
+                //console.log(arr)
                 if (arr.indexOf(result3[j].id) > -1) { }
                 else {
                   arr.push(result3[j].id);
@@ -3535,7 +3535,7 @@ app.get('/getmeabygender/:gender/:happy', cors(issue2options), function (req, re
           for (let i = 0; i < conc.length; i++) {
             for (let j = 0; j < result3.length; j++) {
               if (result3[j].id == conc[i].id) {
-                console.log(arr)
+                //console.log(arr)
                 if (arr.indexOf(result3[j].id) > -1) { }
                 else {
                   arr.push(result3[j].id);
