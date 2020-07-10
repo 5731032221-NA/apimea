@@ -1821,31 +1821,35 @@ app.get('/getcropimage/:name', cors(issue2options), function (req, res) {
     var query = { name: req.params.name };
     dbo.collection("crop").find(query).toArray(function (err, result) {
       if (err) res.json("[]");
-      console.log(result);
-      var rawData = atob(result[0].data);
+      // console.log(result);
+      if (result.length == 0) res.json("[]");
+      // console.log(result);
+      else {
+        var rawData = atob(result[0].data);
 
 
-      var iv = rawData.substring(0, 16);
-      var crypttext = rawData.substring(16);
+        var iv = rawData.substring(0, 16);
+        var crypttext = rawData.substring(16);
 
-      //Parsers
-      crypttext = CryptoJS.enc.Latin1.parse(crypttext);
-      iv = CryptoJS.enc.Latin1.parse(iv);
-      key = CryptoJS.enc.Utf8.parse(master_key);
+        //Parsers
+        crypttext = CryptoJS.enc.Latin1.parse(crypttext);
+        iv = CryptoJS.enc.Latin1.parse(iv);
+        key = CryptoJS.enc.Utf8.parse(master_key);
 
-      // Decrypt
-      var plaintextArray = CryptoJS.AES.decrypt(
-        { ciphertext: crypttext },
-        key,
-        { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
-      );
+        // Decrypt
+        var plaintextArray = CryptoJS.AES.decrypt(
+          { ciphertext: crypttext },
+          key,
+          { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+        );
 
-      // Can be Utf8 too
-      output_plaintext = CryptoJS.enc.Latin1.stringify(plaintextArray);
-      res.json({ "data": output_plaintext });
-      //console.log(result);
+        // Can be Utf8 too
+        output_plaintext = CryptoJS.enc.Latin1.stringify(plaintextArray);
+        res.json({ "data": output_plaintext });
+        //console.log(result);
 
-      db.close();
+        db.close();
+      }
     });
     // }catch(err){
     // //console.log(err.stack);
@@ -4459,7 +4463,7 @@ app.post('/updateconfidence/:id/:confidence', cors(issue2options), function (req
     var dbo = db.db("mea");
     // try{
     var query = { id: req.params.id };
-    var newvalues = { $set: { individual_confidence: req.params.confidence} };
+    var newvalues = { $set: { individual_confidence: req.params.confidence } };
     dbo.collection("profile").updateOne(query, newvalues, function (err, result) {
       if (err) res.json("[]");
       ////console.log(result);
