@@ -4558,6 +4558,50 @@ app.post('/upload', upload.any(), function (req, res, next) {
   res.json('{"Uploaded":"' + blobPath + '"}');
 })
 
+app.get('/deletecropinfobydate/:date/:camera', cors(issue2options), function (req, res) {
+
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    ////console.log("connext");
+    if (err) res.json("[]");
+    var dbo = db.db("cropinfo");
+    // try{
+    var query = { date: req.params.date , camera: parseInt(req.params.camera)};
+    dbo.collection("data").deleteMany(query, function (err, result) {
+      if (err) res.json("[]");
+      ////console.log(result);
+      res.json(result);
+      db.close();
+    });
+    // }catch(err){
+    // ////console.log(err.stack);
+    // res.json("[]");}
+  });
+});
+
+app.get('/removecheckinbydate/:date/:camera', function (req, res) {
+
+  ////console.log("getcheckin");
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("checkin");
+    //var dbo = db.db("mea");
+
+    //dbo.collection("checkattendance").drop(function(err,delOK){
+      var query = {  camerain: parseInt(req.params.camera)};
+      dbo.collection("checkin." + req.params.date).deleteMany(query, function (err, result) {
+      // dbo.collection("lastid").drop(function(err,delOK){
+        res.json(result);
+        db.close();
+    });
+  });
+
+});
+
+
 
 
 app.listen(process.env.PORT || 3000)
