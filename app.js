@@ -3069,11 +3069,11 @@ app.get('/getcountlateweek', cors(issue2options), function (req, res) {
 
 
         for (let i = 0; i < result.length; i++) {
-          if ((result[i].checkin).substring(0, 2) == "05" || (result[i].checkin).substring(0, 2) == "06" || ((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) <= 30)) {
+          if ((result[i].checkin).substring(0, 2) == "05" || (result[i].checkin).substring(0, 2) == "06" || ((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) <= 40)) {
             absence--;
             ontime++;
           }
-          if (((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) > 30) || (result[i].checkin).substring(0, 2) >= "08") {
+          if (((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) > 40) || (result[i].checkin).substring(0, 2) >= "08") {
             absence--;
             late++;
           }
@@ -3129,7 +3129,7 @@ app.get('/getcountlate', cors(issue2options), function (req, res) {
         let overtime = 0;
 
         for (let i = 0; i < result.length; i++) {
-          if ((result[i].checkin).substring(0, 2) == "05" || (result[i].checkin).substring(0, 2) == "06" || ((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) <= 30)) {
+          if ((result[i].checkin).substring(0, 2) == "05" || (result[i].checkin).substring(0, 2) == "06" || ((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) <= 40)) {
             absence--;
             ontime++;
           }
@@ -3187,7 +3187,7 @@ app.get('/getmealate', cors(issue2options), function (req, res) {
         let mea = [];
         for (let i = 0; i < result.length; i++) {
 
-          if (((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) > 41) || (result[i].checkin).substring(0, 2) >= "08") {
+          if (((result[i].checkin).substring(0, 2) == "07" && (result[i].checkin).substring(3, 5) > 40) || (result[i].checkin).substring(0, 2) >= "08") {
             result2.forEach(element => {
               if (element.id == result[i].id) {
                 element.checkin = result[i].checkin
