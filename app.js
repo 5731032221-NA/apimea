@@ -3043,28 +3043,31 @@ app.get('/chagnecheckouttime/:date/:datetime/:id/:imageCropUrl', function (req, 
     var query = { id: req.params.id };
     dbo.collection("checkin." + req.params.date).find(query).toArray(function (err, result) {
       if (err) res.json("[]");
-      dbmea.collection("default").find(query).toArray(function (err, defaultarr) {
-        let default_data = defaultarr[0]
-        // console.log(result[0].checkoutdatetime);
-        if (result[0].checkoutdatetime < req.params.datetime) {
-          var query = { id: req.params.id };
-          var newvalues = {
-            $set: {
-              "checkoutEmotion": { "gender": default_data['gender'], "age": (year_today - 1958 - parseInt(default_data['year'])) + parseInt(default_data['margin']), "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } },
-              "checkoutEmo": "neutral", "checkoutImageCrop": req.params.imageCropUrl,
-              "checkout": req.params.datetime.substring(8, 10) + ":" + req.params.datetime.substring(10, 12), "checkoutdatetime": req.params.datetime
-            }
-          };
-          dbo.collection("checkin." + req.params.date).updateOne(query, newvalues, function (err, result) {
-            if (err) res.json("[]");
-            ////console.log(result);
-            res.json(result);
-            db.close();
-          });
-        } else {
-          res.json({ "message": "less time" });
-        }
-      });
+      if (result.length == 0) res.json({ "message": "not checkin" });
+      else {
+        dbmea.collection("default").find(query).toArray(function (err, defaultarr) {
+          let default_data = defaultarr[0]
+          // console.log(result[0].checkoutdatetime);
+          if (result[0].checkoutdatetime < req.params.datetime) {
+            var query = { id: req.params.id };
+            var newvalues = {
+              $set: {
+                "checkoutEmotion": { "gender": default_data['gender'], "age": (year_today - 1958 - parseInt(default_data['year'])) + parseInt(default_data['margin']), "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } },
+                "checkoutEmo": "neutral", "checkoutImageCrop": req.params.imageCropUrl,
+                "checkout": req.params.datetime.substring(8, 10) + ":" + req.params.datetime.substring(10, 12), "checkoutdatetime": req.params.datetime
+              }
+            };
+            dbo.collection("checkin." + req.params.date).updateOne(query, newvalues, function (err, result) {
+              if (err) res.json("[]");
+              ////console.log(result);
+              res.json(result);
+              db.close();
+            });
+          } else {
+            res.json({ "message": "less time" });
+          }
+        });
+      }
     });
 
   });
