@@ -3075,6 +3075,80 @@ app.get('/chagnecheckouttime/:date/:datetime/:id/:imageCropUrl', function (req, 
 });
 
 
+app.get('/chagnecheckintime/:date/:datetime/:id/:imageCropUrl', function (req, res) {
+  let date_ob = new Date();
+  let year_today = date_ob.getFullYear();
+  ////console.log("getcheckin");
+  const uri = "mongodb://localhost:27017/";
+  //, { useNewUrlParser: true }
+  const client = new MongoClient.connect(uri, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("checkin");
+    var dbmea = db.db("mea");
+    var query = { id: req.params.id };
+    dbo.collection("checkin." + req.params.date).find(query).toArray(function (err, result) {
+      if (err) res.json("[]");
+      if (result.length == 0) { 
+        dbmea.collection("default").find(query).toArray(function (err, defaultarr) {
+          let default_data = defaultarr[0]
+          // console.log(result[0].checkoutdatetime);
+          
+            var newvalues = {
+              
+                "id": req.params.id,
+                "checkin": req.params.datetime.substring(8, 10) + ":" + req.params.datetime.substring(10, 12),
+                "checkindatetime": req.params.datetime,
+                "checkinEmotion": { "gender": default_data['gender'], "age": (year_today - 1958 - parseInt(default_data['year'])) + parseInt(default_data['margin']),
+                "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 }  },
+                "checkinEmo":  "neutral",
+                "checkinImageCrop": req.params.imageCropUrl,
+                "camerain": 0,
+                "checkout": "",
+                "checkoutEmotion": {"gender":"","age":0},
+                "checkoutEmo": "",
+                "checkoutImageCrop": "",
+                "cameraout": 0,
+                "checkoutdatetime": ""
+              
+            };
+            dbo.collection("checkin." + req.params.date).insertOne( newvalues, function (err, result) {
+              if (err) res.json("[]");
+              ////console.log(result);
+              res.json(result);
+              db.close();
+            });
+         
+        });
+      }
+      else {
+        dbmea.collection("default").find(query).toArray(function (err, defaultarr) {
+          let default_data = defaultarr[0]
+          // console.log(result[0].checkoutdatetime);
+          if (req.params.datetime <  result[0].checkindatetime) {
+            var query = { id: req.params.id };
+            var newvalues = {
+              $set: {
+                "checkinEmotion": { "gender": default_data['gender'], "age": (year_today - 1958 - parseInt(default_data['year'])) + parseInt(default_data['margin']), "emotion": { "anger": 0, "contempt": 0, "disgust": 0, "fear": 0, "happiness": 0, "neutral": 1, "sadness": 0, "surprise": 0 } },
+                "checkinEmo": "neutral", "checkinImageCrop": req.params.imageCropUrl,
+                "checkin": req.params.datetime.substring(8, 10) + ":" + req.params.datetime.substring(10, 12), "checkindatetime": req.params.datetime
+              }
+            };
+            dbo.collection("checkin." + req.params.date).updateOne(query, newvalues, function (err, result) {
+              if (err) res.json("[]");
+              ////console.log(result);
+              res.json(result);
+              db.close();
+            });
+          } else {
+            res.json({ "message": "more time" });
+          }
+        });
+      }
+    });
+
+  });
+
+});
 
 app.get('/getcountlateweek', cors(issue2options), function (req, res) {
   let date_ob = new Date();
