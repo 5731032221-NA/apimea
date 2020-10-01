@@ -1,0 +1,7 @@
+{"_id":{"$oid":"5f5edab5dffbd82553bae451"},"date":"2020-09-14","time":"09:51","name":"2020-09-14-2-095128280-crop.jpg","datetime":"20200914095128","detected":"2006503","confidence":0.61436,"train":"","camera":2}
+{"_id":{"$oid":"5f5edab9dffbd82553bae456"},"date":"2020-09-14","time":"09:51","name":"2020-09-14-2-095131240-crop.jpg","datetime":"20200914095131","detected":"8888888","confidence":0.65763,"train":"","camera":2}
+{"_id":{"$oid":"5f5edac63dc1336af4185533"},"date":"2020-09-14","time":"09:51","name":"2020-09-14-3-095144200-crop.jpg","datetime":"20200914095144","detected":"1925325","confidence":0.40277,"train":"","camera":3}
+{"_id":{"$oid":"5f5edb525e432c20b31ddd63"},"date":"2020-09-14","time":"09:54","name":"2020-09-14-1-095406360-crop.jpg","datetime":"20200914095406","detected":"2006503","confidence":0.696,"train":"","camera":1}
+{"_id":{"$oid":"5f5edbc5100168bd05cf95b0"},"date":"2020-09-14","time":"09:55","name":"2020-09-14-4-095559200-crop.jpg","datetime":"20200914095559","detected":"8888888","confidence":0.49237,"train":"","camera":4}
+{"_id":{"$oid":"5f5edde2dffbd82553bae45b"},"date":"2020-09-14","time":"10:05","name":"2020-09-14-2-100500200-crop.jpg","datetime":"20200914100500","detected":"2126709","confidence":0.37014,"train":"","camera":2}
+{"_id":{"$oid":"5f5edde5dffbd82553bae460"},"date":"2020-09-14","time":"10:05","name":"2020-09-14-2-100502160-crop.jpg","datetime":"20200914100502","detected":"2150621","confidence":0.44961,"train":"","camera":2}
